@@ -12,6 +12,9 @@ return MaterialApp(
   title:'Stylefront',
   theme: ThemeData(
     primarySwatch: Colors.blue,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Colors.white,
+          ),
   ),
   home: Home(),
     );
