@@ -5,6 +5,13 @@ import 'package:stylefront/pages/profile.dart';
 import 'package:stylefront/pages/scale.dart';
 import 'package:stylefront/pages/shop.dart';
 import 'package:stylefront/methods/openpagefavorite.dart';
+import 'package:stylefront/methods/openallProduct.dart';
+import 'package:stylefront/widgets/brands.dart';
+import 'package:stylefront/widgets/featured.dart';
+import 'package:stylefront/widgets/newstock.dart';
+import 'package:stylefront/widgets/recommended.dart';
+import 'package:stylefront/utility/csv.dart';
+import 'package:stylefront/models/datamodels.dart';
 
 class Home extends StatefulWidget{
   const Home ({super.key});
@@ -25,13 +32,16 @@ class _Homestate extends State<Home>{
     ..add(Shop())
     ..add(Profile());
     currentPage = Home();
+
   }
+
   void changePage(int index){
     setState(() {
       selectedIndex = index;
       currentPage = _listpages[index];
     });
   }
+
   @override  
   Widget build (BuildContext context){
     return Scaffold(
@@ -43,7 +53,7 @@ class _Homestate extends State<Home>{
           children: <Widget>[ Text('StyleMe',
         style: TextStyle(
           color: Colors.black,
-          fontSize: 40,
+          fontSize: 20,
         ),),
         //IconButton(onPressed: (){}, icon: Icon(Icons.arrow_drop_down),),
         PopupMenuButton<Titledropdown>(
@@ -65,7 +75,8 @@ class _Homestate extends State<Home>{
         actions: <Widget>[
           IconButton(onPressed: () => openpagefavorite(context), icon: Icon(Icons.favorite,
           color: Colors.red,)),
-          IconButton(onPressed: ()=> openpagenotifications(context), icon: Icon(Icons.notification_add_outlined))
+          IconButton(onPressed: ()=> openpagenotifications(context), icon: Icon(Icons.notification_add_outlined)),
+          IconButton(onPressed: ()=> openallProduct(context), icon: Icon(Icons.all_out)),
         ], 
 
       ),
@@ -107,27 +118,13 @@ class _Homestate extends State<Home>{
           ),
           ) ,
               ),
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: EdgeInsets.all(15.00),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('RECOMMENDED',
-                style: TextStyle(fontSize: 30.0),),
-              const SizedBox(height: 10.0),
-              Text('NEW IN STOCKS',
-                style: TextStyle(fontSize: 30.0),),
-              const SizedBox(height: 10.0),
-
-              Text('BRANDS',
-                style: TextStyle(fontSize: 30.0),),
-              const SizedBox(height: 10.0),
-              Text('FEATURED',
-                style: TextStyle(fontSize: 30.0),),
-            ],
-          ),
-        )
+           RecommendedSection(),
+           SizedBox(height: 10,),
+           NewInStockSection(),
+           SizedBox(height: 10,),   
+           BrandsSection(),
+            SizedBox(height: 10,),
+           FeaturedSection(),
          
             ],
            ),
@@ -138,9 +135,11 @@ class _Homestate extends State<Home>{
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home,color:Colors.black),label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.scale_rounded,color:Colors.black),label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.shop_2_rounded,color:Colors.black),label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined,color:Colors.black),label: ''),
           BottomNavigationBarItem(icon:Icon(Icons.person,color:Colors.black),label: ''),
         ]),
     );
   }
 }
+
+
