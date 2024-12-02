@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
+import 'package:stylefront/pages/Productdetailpage.dart';
 
 Future<List<Product>> newstock() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +57,16 @@ class NewInStockSection extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width / 2.2,
-                          child: Card(
+                          child:GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailPage(productId: int.parse(product.id)),
+                      ),
+                    );
+                  },
+                  child:Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -95,13 +105,17 @@ class NewInStockSection extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
+                                      Text(
+                              'Rs.${product.price}',
+                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                            ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
+                        ),),
                       );
                     },
                   ),

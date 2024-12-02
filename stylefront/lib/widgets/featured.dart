@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
+import 'package:stylefront/pages/Productdetailpage.dart';
 
 Future<List<Product>> featured() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +51,16 @@ Widget build(BuildContext context){
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width / 2.2,
+                          child:GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailPage(productId: int.parse(product.id)),
+                      ),
+                    );
+                  },
+                  child:Card(
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -89,6 +100,10 @@ Widget build(BuildContext context){
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
+                                      Text(
+                              'Rs.${product.price}',
+                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                            ),
                                     ],
                                   ),
                                 ),
@@ -96,7 +111,7 @@ Widget build(BuildContext context){
                             ),
                           ),
                         ),
-                      );
+                      )));
                     },
                   ),
                 ),

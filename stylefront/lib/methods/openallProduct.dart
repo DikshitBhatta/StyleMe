@@ -9,6 +9,8 @@ void openallProduct(BuildContext context, {bool fullscreenDialog = false}) async
 
   // Load the CSV data
   List<Map<String, dynamic>> rawCsvData = await DataParser.loadcsv('assets/fashion_sample_5k.csv');
+  List<Map<String, dynamic>> jsonData = await DataParser.loadStyles('assets/merged_data.json');
+
 
   // Convert all values to String explicitly
   List<Map<String, String>> normalizedData = rawCsvData.map((row) {

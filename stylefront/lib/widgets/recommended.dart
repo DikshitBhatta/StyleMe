@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
+import 'package:stylefront/pages/Productdetailpage.dart';
 
 Future<List<Product>> recommended() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,11 +52,20 @@ class RecommendedSection extends StatelessWidget {
               itemCount: products.length, 
               itemBuilder: (context, index) {
                 final product = products[index];
-                return Card(
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailPage(productId: int.parse(product.id)),
+                      ),
+                    );
+                  },
+                  child:Card(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children:<Widget> [
                       Expanded(
                         child: Image.asset(
                           'assets/images/${product.id}.jpg',
@@ -78,12 +88,16 @@ class RecommendedSection extends StatelessWidget {
                               product.brandName,
                               style: TextStyle(color: Colors.grey),
                             ),
+                            Text(
+                              'Rs.${product.price}',
+                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                );
+                ),);
               },
             ),
               ],

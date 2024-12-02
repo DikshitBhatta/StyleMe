@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stylefront/classes/titledopdown.dart';
 import 'package:stylefront/methods/openpagenotifications.dart';
 import 'package:stylefront/pages/profile.dart';
@@ -47,7 +48,18 @@ class _Homestate extends State<Home>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.pan_tool)),
+        leading:GestureDetector(
+          onTap: (){
+            Navigator.push(context,MaterialPageRoute(builder: (context)=> Home()));
+          },
+          child:SizedBox(
+          height: 10.00,
+          width: 20.00,
+          child: Image.asset('assets/icons/LOGO_cropped.png',fit: BoxFit.contain),
+          ),
+        ) ,
+        
+        
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[ Text('StyleMe',
@@ -134,7 +146,7 @@ class _Homestate extends State<Home>{
         currentIndex: selectedIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home,color:Colors.black),label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.scale_rounded,color:Colors.black),label: ''),
+          BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.ruler,color:Colors.black),label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined,color:Colors.black),label: ''),
           BottomNavigationBarItem(icon:Icon(Icons.person,color:Colors.black),label: ''),
         ]),

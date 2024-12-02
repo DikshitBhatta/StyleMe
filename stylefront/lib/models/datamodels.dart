@@ -10,6 +10,7 @@ class Product {
   final String usage;
   final String productDisplayName;
   final String brandName;
+  final int price;
 
   Product({
     required this.id,
@@ -23,6 +24,7 @@ class Product {
     required this.usage,
     required this.productDisplayName,
     required this.brandName,
+    required this.price,
   });
 
   factory Product.fromMap(Map<String, dynamic> map) {
@@ -38,7 +40,9 @@ class Product {
     usage: map['usage'] ?? 'Unknown',
     productDisplayName: map['productDisplayName'] ?? 'No Name',
     brandName: map['brandName'] ?? 'No Brand',
+    price: map['price'] != null ? int.tryParse(map['price'].toString()) ?? 0 : 0,
   );
 }
+
 
 }

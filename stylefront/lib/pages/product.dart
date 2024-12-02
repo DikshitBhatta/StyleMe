@@ -64,6 +64,10 @@ class ProductCatalogue extends StatelessWidget {
                         product.brandName,
                         style: TextStyle(color: Colors.grey),
                       ),
+                      Text(
+                              'Rs.${product.price}',
+                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                            ),
                     ],
                   ),
                 ),

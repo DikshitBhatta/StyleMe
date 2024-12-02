@@ -28,16 +28,20 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  carousel_slider: ^4.2.0
+  font_awesome_flutter: ^10.0.0
   flutter:
     sdk: flutter
   csv: ^5.0.3
+  cupertino_icons: ^1.0.8
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.11.0
+
   flutter_test:
     sdk: flutter
   csv: ^5.0.3
@@ -53,6 +57,10 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/LOGO_cropped.png"
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -63,8 +71,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/styles/
+    - assets/merged_data.json
     - assets/fashion_sample_5k.csv
+    - assets/icons/LOGO_cropped.png
+    - assets/styles/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
