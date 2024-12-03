@@ -80,6 +80,7 @@ flutter:
     - assets/fashion_sample_5k.csv
     - assets/icons/LOGO_cropped.png
     - assets/styles/
+    - assets/payment/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

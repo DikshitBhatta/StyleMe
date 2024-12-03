@@ -5,6 +5,8 @@ import 'package:stylefront/widgets/Rating.dart';
 import 'package:stylefront/widgets/recommended.dart';
 import 'package:stylefront/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:stylefront/provider/favorite_provider.dart';
+import 'package:stylefront/pages/buypage.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
@@ -39,6 +41,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget build(BuildContext context) {
     final sizes = ['S', 'M', 'L', 'XL'];
     final colors = [Colors.black, Colors.blue, Colors.red];
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
+    final isFavorite = favoriteProvider.isFavorite(widget.productId);
 
     if (productData == null) {
       return Scaffold(
@@ -57,6 +61,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Stack(children: [
+
             Center(
               child: Image.asset(
                 imageUrl,
@@ -65,6 +71,27 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 100),
               ),
             ),
+            Positioned(
+              top: 10.00,
+              right: 10.00,
+              child:IconButton(
+                  onPressed: () {
+                    favoriteProvider.toggleFavorite({
+                      'id': widget.productId,
+                      'name': productData?['productDisplayName'],
+                      'price': productData?['price'],
+                      'image': 'assets/images/${widget.productId}.jpg',
+                    });
+                  },
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
+                    color: isFavorite ? Colors.red : null,
+                    size: 30.0,
+                  ),
+              ),
+            ),
+                
+            ],),
             const SizedBox(height: 16.0),
 
             // Product Name
@@ -149,19 +176,48 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                ElevatedButton(onPressed: (){
-                  final product = {
-      'id': widget.productId,
+                ElevatedButton(
+                  onPressed: () {
+                    final product = {
+                      'id': widget.productId,
+                      'name': productData?['productDisplayName'],
+                      'price': productData?['price'],
+                      'image': 'assets/images/${widget.productId}.jpg',
+                    };
+                    Provider.of<CartProvider>(context, listen: false).addToCart(product);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Product added to cart!')),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFE6016),
+                    minimumSize: Size(150.00, 40.00),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.elliptical(10.0, 10.0)),
+                    ),
+                  ),
+                  child: Text(
+                    'Add To Cart',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                ElevatedButton(onPressed: () {
+    final selectedProduct = {
       'name': productData?['productDisplayName'],
       'price': productData?['price'],
       'image': 'assets/images/${widget.productId}.jpg',
+      'quantity': 1,
     };
-    Provider.of<CartProvider>(context, listen: false).addToCart(product);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Product added to cart!')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutPage(
+          selectedItems: [selectedProduct], 
+        ),
+      ),
     );
-                },style: ElevatedButton.styleFrom(backgroundColor:const Color(0xFFFE6016),minimumSize: Size(150.00, 40.00),shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(10.0, 10.0)),),), child:Text('Add To Cart',style: TextStyle(color:  Colors.white,),), ),
-                ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(backgroundColor: const Color(0XFF73D83C),minimumSize: Size(150.00, 40.00),shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(10.0, 10.0)),),), child:Text('Buy now',style: TextStyle(color:  Colors.white,),), ),
+  },
+  style: ElevatedButton.styleFrom(backgroundColor: const Color(0XFF73D83C),minimumSize: Size(150.00, 40.00),shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(10.0, 10.0)),),), child:Text('Buy now',style: TextStyle(color:  Colors.white,),), ),
                
               ],
             ),

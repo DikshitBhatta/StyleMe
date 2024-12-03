@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stylefront/pages/home.dart';
 import 'package:stylefront/provider/cart_provider.dart';
+import 'package:stylefront/provider/favorite_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => cartProvider),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
       ],
       child: const MyApp(),
     ),

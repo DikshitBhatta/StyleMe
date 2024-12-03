@@ -60,8 +60,8 @@ class Cart extends StatelessWidget {
                             title: Row(
                               children: <Widget>[
                                 SizedBox(
-                                  height: 65.0,
-                                  width: 65.0,
+                                  height: 75.0,
+                                  width: 75.0,
                                   child: Image.asset(
                                     item['image'],
                                     fit: BoxFit.fill,
@@ -85,13 +85,6 @@ class Cart extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete_forever_outlined,
-                                  color: Colors.red),
-                              onPressed: () {
-                                cartProvider.removeFromCart(index);
-                              },
                             ),
                           ),
                         ),
