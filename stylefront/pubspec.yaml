@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  shared_preferences: ^2.0.18
   provider: ^6.1.2
   path_provider: ^2.0.13
   json_serializable: ^6.6.1
@@ -46,7 +47,7 @@ dependencies:
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0
-
+  shared_preferences: ^2.0.18
   flutter_test:
     sdk: flutter
   csv: ^5.0.3

@@ -3,13 +3,19 @@ import 'package:provider/provider.dart';
 import 'package:stylefront/pages/home.dart';
 import 'package:stylefront/provider/cart_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final cartProvider = CartProvider();
+  await cartProvider.loadCart();
   runApp(
-  MultiProvider(providers: [ChangeNotifierProvider(create: (_)=> CartProvider())],
-  child: const MyApp(),
-  ),);
-  
-  }
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => cartProvider),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
