@@ -3,27 +3,14 @@ import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/pages/Productdetailpage.dart';
-
-Future<List<Product>> recommended() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  List<Map<String, dynamic>> rawCsvData = await DataParser.loadcsv('assets/fashion_sample_5k.csv');
-  List<Map<String, String>> normalizedData = rawCsvData.map((row) {
-    return row.map((key, value) => MapEntry(key, value.toString()));
-  }).toList();
-  List<Product> products = normalizedData.map((map) {
-    print("Mapping Data: $map"); 
-    return Product.fromMap(map);
-  }).toList();
-
-  return products;
-}
+import 'package:stylefront/methods/productfromcsv.dart';
 
 class RecommendedSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
       
-      future: recommended(),
+      future: productfromcsv(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -82,6 +69,8 @@ class RecommendedSection extends StatelessWidget {
                           children: [
                             Text(
                               product.productDisplayName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(

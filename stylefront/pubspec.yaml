@@ -28,6 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  provider: ^6.1.2
+  path_provider: ^2.0.13
+  json_serializable: ^6.6.1
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
   carousel_slider: ^4.2.0
   font_awesome_flutter: ^10.0.0
   flutter:
@@ -71,7 +76,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/merged_data.json
     - assets/fashion_sample_5k.csv
     - assets/icons/LOGO_cropped.png
     - assets/styles/

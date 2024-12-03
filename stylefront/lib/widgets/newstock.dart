@@ -3,30 +3,13 @@ import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/pages/Productdetailpage.dart';
-
-Future<List<Product>> newstock() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  List<Map<String, dynamic>> rawCsvData = await DataParser.loadcsv('assets/fashion_sample_5k.csv');
-  List<Map<String, String>> normalizedData = rawCsvData.map((row) {
-    return row.map((key, value) => MapEntry(key, value.toString()));
-  }).toList();
-  List<Product> products = normalizedData.map((map) {
-    return Product.fromMap(map);
-  }).toList();
-  products.sort((a,b){
-    double yearA = double.tryParse(a.year) ?? 0.0;
-    double yearB = double.tryParse(b.year) ?? 0.0;
-    return yearA.compareTo(yearB);
-  });
-
-  return products;
-}
+import 'package:stylefront/methods/productfromcsv.dart';
 
 class NewInStockSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
-      future: newstock(),
+      future: productfromcsv(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

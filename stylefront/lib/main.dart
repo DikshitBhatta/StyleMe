@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stylefront/pages/home.dart';
+import 'package:stylefront/provider/cart_provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+  MultiProvider(providers: [ChangeNotifierProvider(create: (_)=> CartProvider())],
+  child: const MyApp(),
+  ),);
+  
+  }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
