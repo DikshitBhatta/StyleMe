@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylefront/methods/openbrands.dart';
 import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
@@ -22,7 +23,7 @@ class BrandsSection extends StatelessWidget {
           final brandNames = products
               .map((product) => product.brandName)
               .toSet()
-              .take(10)
+              .take(100)
               .toList();
 
           return Padding(
@@ -54,7 +55,7 @@ class BrandsSection extends StatelessWidget {
                             side: BorderSide(color: Colors.black),
                           ),
                           onPressed: () {
-                            print('Selected Brand: $brandName');
+                            openBrands(context, brandNames[index]);
                           },
                           child: Text(
                             brandName,

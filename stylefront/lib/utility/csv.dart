@@ -42,10 +42,6 @@ class DataParser{
   }
 }
 
-
-
-
-
   /// Load all JSON files in the folder
 static Future<List<Map<String, dynamic>>> loadStyles(String path) async {
   try {
@@ -74,4 +70,25 @@ static Future<List<Map<String, dynamic>>> loadStyles(String path) async {
     return imageUrls;
   }
 
+  static Future<List<Map<String, dynamic>>> loadAllStyles() async {
+    try {
+      final manifestContent = await rootBundle.loadString('AssetManifest.json');
+      final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+      final stylePaths = manifestMap.keys
+          .where((String key) => key.contains('assets/styles/') && key.endsWith('.json'))
+          .toList();
+
+      List<Map<String, dynamic>> allStyles = [];
+      for (String path in stylePaths) {
+        final jsonString = await rootBundle.loadString(path);
+        final Map<String, dynamic> jsonData = json.decode(jsonString);
+        allStyles.add(jsonData['data']);
+      }
+
+      return allStyles;
+    } catch (e) {
+      print("Error loading all styles: $e");
+      return [];
+    }
+  }
 }
