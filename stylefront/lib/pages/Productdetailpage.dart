@@ -7,6 +7,8 @@ import 'package:stylefront/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:stylefront/provider/favorite_provider.dart';
 import 'package:stylefront/pages/buypage.dart';
+import 'package:stylefront/utility/csv.dart';
+import 'package:html/parser.dart' as html_parser; // Add this import
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
@@ -19,6 +21,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   Map<String, dynamic>? productData;
+  List<String> productImages = [];
 
   @override
   void initState() {
@@ -29,12 +32,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Future<void> _loadProductDetails() async {
     try {
       final String response = await rootBundle.loadString('assets/styles/${widget.productId}.json');
+      final Map<String, dynamic> data = jsonDecode(response);
       setState(() {
-        productData = jsonDecode(response)['data'];
+        productData = data['data'];
+        productImages = DataParser.parseImageUrls(data['data']);
+        debugPrint('Product Images: $productImages'); // Debug print
       });
     } catch (e) {
       debugPrint('Error loading product details: $e');
     }
+  }
+
+  String _parseHtmlString(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? '';
   }
 
   @override
@@ -62,19 +73,41 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(children: [
-
-            Center(
-              child: Image.asset(
-                imageUrl,
-                height: 250,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 100),
-              ),
-            ),
-            Positioned(
-              top: 10.00,
-              right: 10.00,
-              child:IconButton(
+              if (productImages.isNotEmpty)
+                SizedBox(
+                  height: 300.00,
+                  child: PageView.builder(
+                    itemCount: productImages.length,
+                    itemBuilder: (context, index) {
+                      return Image.network(
+                        productImages[index],
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          debugPrint('Error loading image: $error');
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.broken_image,
+                                size: 100,
+                              ),
+                              SizedBox(height: 8),
+                              Text('Failed to load image'),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                )
+              else
+                const Center(
+                  child: Text('No images available'),
+                ),
+              Positioned(
+                top: 10.00,
+                right: 10.00,
+                child: IconButton(
                   onPressed: () {
                     favoriteProvider.toggleFavorite({
                       'id': widget.productId,
@@ -88,10 +121,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     color: isFavorite ? Colors.red : null,
                     size: 30.0,
                   ),
+                ),
               ),
-            ),
-                
-            ],),
+            ]),
             const SizedBox(height: 16.0),
 
             // Product Name
@@ -201,27 +233,37 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                ElevatedButton(onPressed: () {
-    final selectedProduct = {
-      'name': productData?['productDisplayName'],
-      'price': productData?['price'],
-      'image': 'assets/images/${widget.productId}.jpg',
-      'quantity': 1,
-    };
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CheckoutPage(
-          selectedItems: [selectedProduct], 
-        ),
-      ),
-    );
-  },
-  style: ElevatedButton.styleFrom(backgroundColor: const Color(0XFF73D83C),minimumSize: Size(150.00, 40.00),shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(10.0, 10.0)),),), child:Text('Buy now',style: TextStyle(color:  Colors.white,),), ),
-               
+                ElevatedButton(
+                  onPressed: () {
+                    final selectedProduct = {
+                      'name': productData?['productDisplayName'],
+                      'price': productData?['price'],
+                      'image': 'assets/images/${widget.productId}.jpg',
+                      'quantity': 1,
+                    };
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CheckoutPage(
+                          selectedItems: [selectedProduct],
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0XFF73D83C),
+                    minimumSize: Size(150.00, 40.00),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.elliptical(10.0, 10.0)),
+                    ),
+                  ),
+                  child: Text(
+                    'Buy now',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ],
             ),
-            
             const SizedBox(height: 16.0),
             Rating(),
             const SizedBox(height: 8.0),
@@ -240,6 +282,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               Text(
                 'Occasion: ${productData?['articleAttributes']['Occasion']}',
                 style: const TextStyle(fontSize: 16),
+              ),
+            const SizedBox(height: 16.0),
+
+            // Product Description
+            if (productData?['productDescriptors']?['description']?['value'] != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Description:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    _parseHtmlString(productData!['productDescriptors']['description']['value']),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
           ],
         ),

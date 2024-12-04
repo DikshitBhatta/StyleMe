@@ -62,5 +62,16 @@ static Future<List<Map<String, dynamic>>> loadStyles(String path) async {
   }
 }
 
+  static List<String> parseImageUrls(Map<String, dynamic> jsonData) {
+    List<String> imageUrls = [];
+    if (jsonData.containsKey('styleImages')) {
+      jsonData['styleImages'].forEach((key, value) {
+        if (value is Map && value.containsKey('imageURL')) {
+          imageUrls.add(value['imageURL']);
+        }
+      });
+    }
+    return imageUrls;
+  }
 
 }
