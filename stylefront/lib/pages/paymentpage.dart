@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({Key? key}) : super(key: key);
+  final Function(String) onPaymentMethodSelected;
+
+  const PaymentPage({Key? key, required this.onPaymentMethodSelected}) : super(key: key);
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -65,6 +67,13 @@ class _PaymentPageState extends State<PaymentPage> {
                   });
                 },
               ),
+              onTap: () {
+                setState(() {
+                  selectedPaymentMethod = 'Esewa';
+                });
+                widget.onPaymentMethodSelected('Esewa');
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               leading: Image.asset('assets/payment/Khalti.png', width: 40),
@@ -78,6 +87,13 @@ class _PaymentPageState extends State<PaymentPage> {
                   });
                 },
               ),
+              onTap: () {
+                setState(() {
+                  selectedPaymentMethod = 'Khalti';
+                });
+                widget.onPaymentMethodSelected('Khalti');
+                Navigator.pop(context);
+              },
             ),
             const SizedBox(height: 16),
             // Conditionally show these fields only when "Credit card" is selected
@@ -148,6 +164,9 @@ class _PaymentPageState extends State<PaymentPage> {
                   print('Card Number: $cardNumber');
                   print('Date: $date');
                   print('CVV: $cvv');
+
+                  widget.onPaymentMethodSelected(selectedPaymentMethod);
+                  Navigator.pop(context);
                 },
                 child: const Text(
                   'Add card',

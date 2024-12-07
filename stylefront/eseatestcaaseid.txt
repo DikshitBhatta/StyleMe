@@ -1,0 +1,9 @@
+client
+id:9806800001
+pin: 1122
+verificationcode: 123456
+
+merchant:
+client_id: JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R
+client_secret: BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==
+

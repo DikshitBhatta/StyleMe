@@ -41,17 +41,17 @@ dependencies:
     sdk: flutter
   csv: ^5.0.3
   cupertino_icons: ^1.0.8
-
+  esewa_flutter_sdk:
+    path: ./eSewaSdk/esewa_flutter_sdk
+  dio: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0
-  shared_preferences: ^2.0.18
+
   flutter_test:
     sdk: flutter
-  csv: ^5.0.3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

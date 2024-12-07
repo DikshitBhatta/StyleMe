@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:stylefront/pages/paymentpage.dart';
 import 'package:stylefront/pages/shippingaddress.dart';
 
-class CheckoutPage extends StatelessWidget {
+import 'package:stylefront/payment/esewa.dart';
+
+
+class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
 
   const CheckoutPage({Key? key, required this.selectedItems}) : super(key: key);
 
   @override
+  _CheckoutPageState createState() => _CheckoutPageState();
+}
+
+class _CheckoutPageState extends State<CheckoutPage> {
+  String selectedPaymentMethod = 'Select payment method';
+
+  @override
   Widget build(BuildContext context) {
-    double totalPrice = selectedItems.fold(
+    double totalPrice = widget.selectedItems.fold(
       0.0,
       (sum, item) {
         double price = double.tryParse(item['price'].toString()) ?? 0.0;
@@ -17,6 +27,7 @@ class CheckoutPage extends StatelessWidget {
         return sum + (price * quantity);
       },
     );
+    Esewa esewa = Esewa();
 
     return Scaffold(
       appBar: AppBar(
@@ -43,9 +54,9 @@ class CheckoutPage extends StatelessWidget {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: selectedItems.length,
+                itemCount: widget.selectedItems.length,
                 itemBuilder: (context, index) {
-                  final item = selectedItems[index];
+                  final item = widget.selectedItems[index];
                   return ListTile(
                     leading: null,
                     title:  Row(
@@ -138,12 +149,20 @@ class CheckoutPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Select payment method', style: TextStyle(fontSize: 16)),
+                    Text(selectedPaymentMethod, style: TextStyle(fontSize: 16)),
                     IconButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => PaymentPage()),
+                          MaterialPageRoute(
+                            builder: (context) => PaymentPage(
+                              onPaymentMethodSelected: (method) {
+                                setState(() {
+                                  selectedPaymentMethod = method;
+                                });
+                              },
+                            ),
+                          ),
                         );
                       },
                       icon: const Icon(Icons.arrow_forward, color: Colors.black),
@@ -163,7 +182,15 @@ class CheckoutPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  if (selectedPaymentMethod == 'Esewa') {
+                    String productName = widget.selectedItems.isNotEmpty
+                        ? widget.selectedItems[0]['name']
+                        : 'Product';
+                    esewa.initiatePayment(productName, totalPrice.toString());
+                  } else {
+                  }
+                },
                 child: Text(
                   'Pay - NPR $totalPrice',
                   style: const TextStyle(
