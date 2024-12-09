@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stylefront/pages/paymentpage.dart';
 import 'package:stylefront/pages/shippingaddress.dart';
-
 import 'package:stylefront/payment/esewa.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:stylefront/payment/khaltipage.dart'; 
 
 
 class CheckoutPage extends StatefulWidget {
@@ -27,37 +28,47 @@ class _CheckoutPageState extends State<CheckoutPage> {
         return sum + (price * quantity);
       },
     );
-    Esewa esewa = Esewa();
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Checkout',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return KhaltiScope(
+      publicKey: 'test_public_key_d5d9f63743584dc38753056b0cc737d5', // public key
+      enabledDebugging: false,
+      builder: (context, navKey) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: const Text(
+              'Checkout',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
           ),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.selectedItems.length,
-                itemBuilder: (context, index) {
-                  final item = widget.selectedItems[index];
-                  return ListTile(
+          body: buildCheckoutBody(context, totalPrice), 
+        );
+      },
+    );
+  }
+
+  Widget buildCheckoutBody(BuildContext context, double totalPrice) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: widget.selectedItems.length,
+              itemBuilder: (context, index) {
+                final item = widget.selectedItems[index];
+                return ListTile(
                     leading: null,
                     title:  Row(
                               children: <Widget>[
@@ -90,116 +101,110 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                     subtitle: null,
           
-                  );
-                },
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text('SHIPPING ADDRESS', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey)),
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ShippingAddressPage()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text('Select Address', style: TextStyle(fontSize: 16)),
+                  Icon(Icons.arrow_forward, color: Colors.black),
+                ],
               ),
             ),
-            const Text(
-              'SHIPPING ADDRESS',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
+          ),
+          const SizedBox(height: 24),
+          const Text('PAYMENT METHOD', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey)),
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8),
               ),
-            ),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Add shipping address', style: TextStyle(fontSize: 16)),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ShippingAddressPage()),
-                        );
-                      },
-                      icon: const Icon(Icons.add, color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'PAYMENT METHOD',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(selectedPaymentMethod, style: TextStyle(fontSize: 16)),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PaymentPage(
-                              onPaymentMethodSelected: (method) {
-                                setState(() {
-                                  selectedPaymentMethod = method;
-                                });
-                              },
-                            ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(selectedPaymentMethod, style: TextStyle(fontSize: 16)),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentPage(
+                            onPaymentMethodSelected: (method) {
+                              setState(() {
+                                selectedPaymentMethod = method;
+                              });
+                            },
                           ),
-                        );
-                      },
-                      icon: const Icon(Icons.arrow_forward, color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Container(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF023C45),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.arrow_forward, color: Colors.black),
                   ),
-                ),
-                onPressed: () {
-                  if (selectedPaymentMethod == 'Esewa') {
-                    String productName = widget.selectedItems.isNotEmpty
-                        ? widget.selectedItems[0]['name']
-                        : 'Product';
-                    esewa.initiatePayment(productName, totalPrice.toString());
-                  } else {
-                  }
-                },
-                child: Text(
-                  'Pay - NPR $totalPrice',
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 24),
+          Container(
+            width: double.infinity,
+            height: 60,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF023C45),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () {
+                if (selectedPaymentMethod == 'Esewa') {
+                  String productName = widget.selectedItems.isNotEmpty
+                      ? widget.selectedItems[0]['name']
+                      : 'Product';
+                  Esewa esewa = Esewa(product: widget.selectedItems[0]);
+                  esewa.initiatePayment(productName, totalPrice.toString(), context);
+                } else if (selectedPaymentMethod == 'Khalti') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => KhaltiPaymentWidget(
+                        totalPrice: totalPrice,
+                        product: widget.selectedItems[0],
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please select a payment method!')),
+                  );
+                }
+              },
+              child: Text(
+                'Pay - NPR $totalPrice',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

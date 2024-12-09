@@ -5,10 +5,16 @@ import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
 import 'package:esewa_flutter_sdk/esewa_config.dart';
 import 'package:esewa_flutter_sdk/esewa_payment.dart';
 import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
+import 'package:provider/provider.dart';
 import 'package:stylefront/constants/esewaconstants.dart';
+import 'package:stylefront/provider/order_provider.dart';
 
 class Esewa {
-  void initiatePayment(String productName, String productPrice) {
+  final Map<String, dynamic> product;
+
+  Esewa({required this.product});
+
+  void initiatePayment(String productName, String productPrice, BuildContext context) {
     try {
       EsewaFlutterSdk.initPayment(
         esewaConfig: EsewaConfig(
@@ -24,7 +30,8 @@ class Esewa {
         ),
         onPaymentSuccess: (EsewaPaymentSuccessResult data) {
           debugPrint(":::SUCCESS::: => $data");
-          verify(data);
+          Provider.of<OrderProvider>(context, listen: false).addOrder(product);
+          verify(data, context);
         },
         onPaymentFailure: (data) {
           debugPrint(":::FAILURE::: => $data");
@@ -38,7 +45,7 @@ class Esewa {
     }
   }
 
- verify(EsewaPaymentSuccessResult result) async {
+  void verify(EsewaPaymentSuccessResult result, BuildContext context) async {
     try {
       Dio dio = Dio();
       String basic =
@@ -54,9 +61,20 @@ class Esewa {
           },
         ),
       );
-      print(response.data);
+      print('Response data: ${response.data}');
+      print('Response status: ${response.statusCode}');
+      print('Response headers: ${response.headers}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Payment Verified!')),
+      );
     } catch (e) {
-      print(e);
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Payment Verification Failed!')),
+      );
+    } finally {
+      Navigator.of(context).pop();
     }
   }
 }
