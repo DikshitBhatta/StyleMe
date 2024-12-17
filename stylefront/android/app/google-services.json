@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "258907945398",
+    "project_id": "styleme-ebe6b",
+    "storage_bucket": "styleme-ebe6b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258907945398:android:7270575e53e4dbda53a917",
+        "android_client_info": {
+          "package_name": "com.example.stylefront"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258907945398-qo793c9l7le7hah2s9jc55pu09e4lv2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_2jzRV-9tCR-UX632b5Wh6SqOlxA5AgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258907945398-qo793c9l7le7hah2s9jc55pu09e4lv2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,9 +5,12 @@ import 'package:stylefront/provider/cart_provider.dart';
 import 'package:stylefront/provider/favorite_provider.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:stylefront/provider/order_provider.dart';
+import 'package:stylefront/pages/onboarding/onboarding_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   final cartProvider = CartProvider();
   await cartProvider.loadCart();
   runApp(
@@ -40,7 +43,7 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: const [
             KhaltiLocalizations.delegate,
           ],
-          home: const Home(),
+          home: OnboardingScreen()
         );
       },
     );
