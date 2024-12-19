@@ -4,38 +4,87 @@ import 'package:stylefront/provider/cart_provider.dart';
 import 'package:stylefront/pages/Productdetailpage.dart';
 import 'package:stylefront/pages/buypage.dart'; 
 
-class Cart extends StatelessWidget {
+class Cart extends StatefulWidget {
   const Cart({super.key});
+
+  @override
+  _CartState createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  bool _isSearching = false;
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
-
-    // Check if there are selected items
     final hasSelectedItems = cartProvider.selectedItems.isNotEmpty;
+    final filteredItems = cartProvider.cartItem.where((item) {
+      return item['name'].toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Cart')),
+        title: _isSearching
+            ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  color: Colors.grey.shade100,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.search),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Search',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (query) {
+                          setState(() {
+                            _searchQuery = query;
+                          });
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        setState(() {
+                          _isSearching = false;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              )
+            : const Center(child: Text('Cart')),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
+          if (!_isSearching)
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  _isSearching = true;
+                });
+              },
+            ),
         ],
       ),
       body: Column(
         children: [
           // Cart items
           Expanded(
-            child: cartProvider.cartItem.isEmpty
+            child: filteredItems.isEmpty
                 ? const Center(
-                    child: Text('Your cart is empty!'),
+                    child: Text('No items found!'),
                   )
                 : ListView.builder(
-                    itemCount: cartProvider.cartItem.length,
+                    itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
-                      final item = cartProvider.cartItem[index];
+                      final item = filteredItems[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 3.0),
                         child: GestureDetector(

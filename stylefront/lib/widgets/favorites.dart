@@ -4,7 +4,9 @@ import 'package:stylefront/provider/favorite_provider.dart';
 import 'package:stylefront/pages/Productdetailpage.dart';
 
 class Favorites extends StatefulWidget {
-  const Favorites({super.key});
+  final String searchQuery;
+
+  const Favorites({super.key, this.searchQuery = ''});
 
   @override
   _FavoritesState createState() => _FavoritesState();
@@ -15,13 +17,17 @@ class _FavoritesState extends State<Favorites> {
   Widget build(BuildContext context) {
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
     final favoriteItems = favoriteProvider.favoriteItems;
+    final filteredItems = favoriteItems.where((item) {
+      return item['name'].toLowerCase().contains(widget.searchQuery.toLowerCase());
+    }).toList();
+
     return Container(
       child: Column(
         children: [
-          if (favoriteItems.isEmpty)
+          if (filteredItems.isEmpty)
             const Center(
               child: Text(
-                'No favorites yet!',
+                'No favorites found',
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -36,9 +42,9 @@ class _FavoritesState extends State<Favorites> {
                     mainAxisSpacing: 10.0,
                     childAspectRatio: 0.75,
                   ),
-                  itemCount: favoriteItems.length,
+                  itemCount: filteredItems.length,
                   itemBuilder: (context, index) {
-                    final item = favoriteItems[index];
+                    final item = filteredItems[index];
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stylefront/pages/home.dart';
+import 'package:stylefront/pages/onboarding/onboarding_screen.dart';
 import 'package:stylefront/provider/cart_provider.dart';
 import 'package:stylefront/provider/favorite_provider.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:stylefront/provider/order_provider.dart';
-import 'package:stylefront/pages/onboarding/onboarding_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

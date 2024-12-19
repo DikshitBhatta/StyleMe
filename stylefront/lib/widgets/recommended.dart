@@ -6,6 +6,8 @@ import 'package:stylefront/pages/Productdetailpage.dart';
 import 'package:stylefront/methods/productfromcsv.dart';
 
 class RecommendedSection extends StatelessWidget {
+  const RecommendedSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(

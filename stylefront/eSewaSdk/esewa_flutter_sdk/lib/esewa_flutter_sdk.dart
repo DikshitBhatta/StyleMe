@@ -8,7 +8,7 @@ import 'constants.dart';
 
 class EsewaFlutterSdk {
   static const MethodChannel _channel =
-      const MethodChannel(METHOD_CHANNEL_NAME);
+      MethodChannel(METHOD_CHANNEL_NAME);
 
   static void showToast(String message) {
     _channel.invokeMethod('showToast', {"message": message});

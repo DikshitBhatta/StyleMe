@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-import 'package:stylefront/methods/openpagefavorite.dart';
 import 'package:stylefront/widgets/settings.dart';
-import 'package:stylefront/widgets/favorites.dart';
 import 'package:stylefront/widgets/overview.dart';
 import 'package:stylefront/pages/authentication/signin.dart';
 

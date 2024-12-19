@@ -9,7 +9,7 @@ import 'package:stylefront/payment/khaltipage.dart';
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
 
-  const CheckoutPage({Key? key, required this.selectedItems}) : super(key: key);
+  const CheckoutPage({super.key, required this.selectedItems});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -167,7 +167,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
           const SizedBox(height: 24),
-          Container(
+          SizedBox(
             width: double.infinity,
             height: 60,
             child: ElevatedButton(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:stylefront/methods/opencart.dart';
 import 'package:stylefront/widgets/Rating.dart';
-import 'package:stylefront/widgets/recommended.dart';
 import 'package:stylefront/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:stylefront/provider/favorite_provider.dart';
@@ -11,12 +10,12 @@ import 'package:stylefront/pages/buypage.dart';
 import 'package:stylefront/utility/csv.dart';
 import 'package:html/parser.dart' as html_parser; 
 import 'package:stylefront/widgets/justforyou.dart';
-import 'package:stylefront/pages/shop.dart';
+import 'package:stylefront/pages/searchpage.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
 
-  const ProductDetailPage({Key? key, required this.productId}) : super(key: key);
+  const ProductDetailPage({super.key, required this.productId});
 
   @override
   _ProductDetailPageState createState() => _ProductDetailPageState();
@@ -53,6 +52,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return document.body?.text ?? '';
   }
 
+  void _onSearchSubmitted(String query) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPage(query: query),
+      ),
+    );
+  }
+
   AppBar _buildAppBar() {
     return AppBar(
       title: Container(
@@ -71,6 +79,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   hintText: 'Search',
                   border: InputBorder.none,
                 ),
+                onSubmitted: _onSearchSubmitted,
               ),
             ),
             Icon(Icons.mic, color: Colors.black),

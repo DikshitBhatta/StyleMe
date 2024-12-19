@@ -6,7 +6,7 @@ import 'package:stylefront/provider/order_provider.dart';
 class PaymentSuccessfulPage extends StatelessWidget {
   final Map<String, dynamic> product;
 
-  PaymentSuccessfulPage({required this.product});
+  const PaymentSuccessfulPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {

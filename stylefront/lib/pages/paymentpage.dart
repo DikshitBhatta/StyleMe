@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PaymentPage extends StatefulWidget {
   final Function(String) onPaymentMethodSelected;
 
-  const PaymentPage({Key? key, required this.onPaymentMethodSelected}) : super(key: key);
+  const PaymentPage({super.key, required this.onPaymentMethodSelected});
 
   @override
   _PaymentPageState createState() => _PaymentPageState();

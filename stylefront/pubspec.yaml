@@ -50,6 +50,8 @@ flutter:
     - assets/images/
     - assets/fashion_sample_5k.csv
     - assets/icons/LOGO_cropped.png
+    - assets/icons/LOGOcolor.png
+    - assets/icons/
     - assets/styles/
     - assets/payment/
 

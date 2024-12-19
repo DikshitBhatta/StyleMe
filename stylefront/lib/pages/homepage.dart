@@ -3,12 +3,12 @@ import 'package:stylefront/widgets/brands.dart';
 import 'package:stylefront/widgets/featured.dart';
 import 'package:stylefront/widgets/newstock.dart';
 import 'package:stylefront/widgets/recommended.dart';
-import 'package:stylefront/utility/csv.dart';
-import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/classes/titledopdown.dart';
 import 'package:stylefront/methods/openpagenotifications.dart';
 import 'package:stylefront/methods/openpagefavorite.dart';
 import 'package:stylefront/methods/openallProduct.dart';
+import 'package:stylefront/pages/home.dart';
+import 'package:stylefront/pages/searchpage.dart';
 
 class Homepage extends StatefulWidget{
   const Homepage ({super.key});
@@ -18,6 +18,14 @@ class Homepage extends StatefulWidget{
 
 class _Homepagestate extends State<Homepage>{
 
+  void _onSearchSubmitted(String query) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPage(query: query),
+      ),
+    );
+  }
 
   @override  
   Widget build (BuildContext context){
@@ -26,12 +34,12 @@ class _Homepagestate extends State<Homepage>{
         backgroundColor: Colors.white,
         leading:GestureDetector(
           onTap: (){
-            Navigator.push(context,MaterialPageRoute(builder: (context)=> Homepage()));
+            Navigator.push(context,MaterialPageRoute(builder: (context)=> Home()));
           },
           child:SizedBox(
           height: 10.00,
           width: 20.00,
-          child: Image.asset('assets/icons/LOGO_cropped.png',fit: BoxFit.contain),
+          child: Image.asset("assets/icons/LOGOcolor.png",fit: BoxFit.contain),
           ),
         ) ,
         
@@ -98,6 +106,7 @@ class _Homepagestate extends State<Homepage>{
                     hintText: '''Search''',
                     border: InputBorder.none,
                   ),
+                  onSubmitted: _onSearchSubmitted,
                 ),
               ),
               Icon(Icons.mic,

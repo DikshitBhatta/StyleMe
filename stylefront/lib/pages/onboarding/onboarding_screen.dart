@@ -3,12 +3,14 @@ import 'package:stylefront/pages/authentication/signin.dart';
 import 'package:stylefront/widgets/wave_painter.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> with TickerProviderStateMixin {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentPage = 0;
   int _previousPage = 0; // Track the previous page
   late AnimationController _animationController1;

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class Titledropdown {
   final String? title;
@@ -11,6 +10,7 @@ List<Titledropdown> Catalogue = [
   Titledropdown(title: 'Nightwear'),
   Titledropdown(title: 'Tshirt'),
   Titledropdown(title: 'Coats'),
+  Titledropdown(title: 'Sports'),
   Titledropdown(title: 'Shirts'),
   Titledropdown(title: 'Collections'),
   Titledropdown(title: 'New Products'),

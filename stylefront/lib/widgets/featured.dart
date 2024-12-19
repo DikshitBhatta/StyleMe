@@ -6,6 +6,8 @@ import 'package:stylefront/pages/Productdetailpage.dart';
 import 'package:stylefront/methods/productfromcsv.dart';
 
 class FeaturedSection extends StatelessWidget {
+  const FeaturedSection({super.key});
+
 @override   
 Widget build(BuildContext context){
   return FutureBuilder<List<Product>>(

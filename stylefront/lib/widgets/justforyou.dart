@@ -6,9 +6,9 @@ class buildJustForYouSection extends StatefulWidget {
   final Map<String, dynamic>? productData;
 
   const buildJustForYouSection({
-    Key? key,
+    super.key,
     required this.productData,
-  }) : super(key: key);
+  });
 
   @override
   _buildJustForYouSectionState createState() => _buildJustForYouSectionState();

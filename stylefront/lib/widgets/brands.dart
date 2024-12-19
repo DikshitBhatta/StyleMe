@@ -7,6 +7,8 @@ import 'package:stylefront/methods/productfromcsv.dart';
 
 
 class BrandsSection extends StatelessWidget {
+  const BrandsSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
@@ -36,7 +38,7 @@ class BrandsSection extends StatelessWidget {
                   style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                Container(
+                SizedBox(
                   height: 40.00,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

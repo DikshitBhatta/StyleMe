@@ -7,7 +7,7 @@ class KhaltiPaymentWidget extends StatelessWidget {
   final double totalPrice;
   final Map<String, dynamic> product;
 
-  const KhaltiPaymentWidget({Key? key, required this.totalPrice, required this.product}) : super(key: key);
+  const KhaltiPaymentWidget({super.key, required this.totalPrice, required this.product});
 
   @override
   Widget build(BuildContext context) {

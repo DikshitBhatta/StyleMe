@@ -5,6 +5,8 @@ import 'signup.dart'; // Import the signup page
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -84,7 +86,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double _spacing = 16.0;
+    final double spacing = 16.0;
 
     return Scaffold(
       // Background gradient
@@ -98,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        padding: EdgeInsets.symmetric(horizontal: _spacing),
+        padding: EdgeInsets.symmetric(horizontal: spacing),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +116,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: _spacing / 2),
+              SizedBox(height: spacing / 2),
               Text(
                 'Please log in to continue',
                 style: TextStyle(
@@ -123,7 +125,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: _spacing * 2),
+              SizedBox(height: spacing * 2),
               // Social Buttons
               _buildSocialButton(
                 label: 'Continue with Google',
@@ -132,7 +134,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 textColor: Colors.black,
                 onPressed: _signInWithGoogle,
               ),
-              SizedBox(height: _spacing),
+              SizedBox(height: spacing),
               _buildSocialButton(
                 label: 'Continue with Facebook',
                 icon: Icons.facebook,
@@ -142,7 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   // Placeholder action for Facebook sign-in
                 },
               ),
-              SizedBox(height: _spacing * 2),
+              SizedBox(height: spacing * 2),
               // Divider with OR
               Row(
                 children: [
@@ -154,14 +156,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   Expanded(child: Divider(color: Colors.grey)),
                 ],
               ),
-              SizedBox(height: _spacing * 2),
+              SizedBox(height: spacing * 2),
               // Email Field
               _buildTextField(
                 controller: _emailController,
                 labelText: 'Email',
                 prefixIcon: Icons.email,
               ),
-              SizedBox(height: _spacing),
+              SizedBox(height: spacing),
               // Password Field
               _buildTextField(
                 controller: _passwordController,
@@ -181,7 +183,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: _spacing),
+              SizedBox(height: spacing),
               // Sign In Button
               ElevatedButton(
                 onPressed: _signInWithEmailAndPassword,
@@ -191,7 +193,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 child: Text('Sign In'),
               ),
-              SizedBox(height: _spacing * 2),
+              SizedBox(height: spacing * 2),
               // Sign Up Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
