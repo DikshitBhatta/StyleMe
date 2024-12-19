@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
-import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/pages/Productdetailpage.dart';
 import 'package:stylefront/methods/productfromcsv.dart';
 
 class FeaturedSection extends StatelessWidget {
+  const FeaturedSection({super.key});
+
 @override   
 Widget build(BuildContext context){
   return FutureBuilder<List<Product>>(

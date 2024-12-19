@@ -3,8 +3,6 @@ import 'package:stylefront/widgets/brands.dart';
 import 'package:stylefront/widgets/featured.dart';
 import 'package:stylefront/widgets/newstock.dart';
 import 'package:stylefront/widgets/recommended.dart';
-import 'package:stylefront/utility/csv.dart';
-import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/classes/titledopdown.dart';
 import 'package:stylefront/methods/openpagenotifications.dart';
 import 'package:stylefront/methods/openpagefavorite.dart';

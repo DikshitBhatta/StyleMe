@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   html: ^0.15.0
+  camera:
   shared_preferences: ^2.0.18
   provider: ^6.1.2
   path_provider: ^2.0.13
@@ -24,7 +25,7 @@ dependencies:
   esewa_flutter_sdk:
     path: ./eSewaSdk/esewa_flutter_sdk
   dio: ^5.7.0
-  http: ^1.1.0
+  http: ^1.2.2
   khalti_flutter: ^3.0.0
   flutter_localizations:
     sdk: flutter

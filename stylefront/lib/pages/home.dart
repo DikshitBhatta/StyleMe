@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:stylefront/classes/titledopdown.dart';
-import 'package:stylefront/methods/openpagenotifications.dart';
 import 'package:stylefront/pages/profile.dart';
 import 'package:stylefront/pages/scale.dart';
 import 'package:stylefront/pages/shop.dart';
-import 'package:stylefront/methods/openpagefavorite.dart';
-import 'package:stylefront/methods/openallProduct.dart';
-import 'package:stylefront/widgets/brands.dart';
-import 'package:stylefront/widgets/featured.dart';
-import 'package:stylefront/widgets/newstock.dart';
-import 'package:stylefront/widgets/recommended.dart';
-import 'package:stylefront/utility/csv.dart';
-import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/pages/homepage.dart';
 
 class Home extends StatefulWidget{

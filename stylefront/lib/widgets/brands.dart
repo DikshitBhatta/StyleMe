@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:stylefront/methods/openbrands.dart';
-import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
-import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/methods/productfromcsv.dart';
 
 
 class BrandsSection extends StatelessWidget {
+  const BrandsSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
@@ -36,7 +36,7 @@ class BrandsSection extends StatelessWidget {
                   style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                Container(
+                SizedBox(
                   height: 40.00,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

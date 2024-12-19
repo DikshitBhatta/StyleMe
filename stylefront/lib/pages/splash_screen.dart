@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

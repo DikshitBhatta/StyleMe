@@ -3,12 +3,14 @@ import 'sign_in_screen.dart';
 import '../widgets/splash_painter.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> with TickerProviderStateMixin {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentPage = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;

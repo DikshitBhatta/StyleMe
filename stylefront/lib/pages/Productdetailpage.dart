@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:stylefront/methods/opencart.dart';
 import 'package:stylefront/widgets/Rating.dart';
-import 'package:stylefront/widgets/recommended.dart';
 import 'package:stylefront/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:stylefront/provider/favorite_provider.dart';
@@ -11,12 +10,11 @@ import 'package:stylefront/pages/buypage.dart';
 import 'package:stylefront/utility/csv.dart';
 import 'package:html/parser.dart' as html_parser; 
 import 'package:stylefront/widgets/justforyou.dart';
-import 'package:stylefront/pages/shop.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
 
-  const ProductDetailPage({Key? key, required this.productId}) : super(key: key);
+  const ProductDetailPage({super.key, required this.productId});
 
   @override
   _ProductDetailPageState createState() => _ProductDetailPageState();

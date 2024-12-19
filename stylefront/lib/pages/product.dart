@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stylefront/widgets/favorites.dart';
-import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/models/datamodels.dart';
 
 class ProductCatalogue extends StatelessWidget {
   final List<Product> products;
-  const ProductCatalogue({Key? key, required this.products}) : super(key: key);
+  const ProductCatalogue({super.key, required this.products});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

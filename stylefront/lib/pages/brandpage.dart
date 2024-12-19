@@ -5,14 +5,14 @@ import 'package:stylefront/pages/Productdetailpage.dart';
 class brandPage extends StatelessWidget {
   final List<Product> products;
   final String brand;
-  const brandPage({Key? key, required this.products, required this.brand}) : super(key: key);
+  const brandPage({super.key, required this.products, required this.brand});
 
   @override
   Widget build(BuildContext context) {
     final filteredProducts = products.where((product) => product.brandName == brand).toList();
     return Scaffold(
       appBar: AppBar(
-        title: Text('${brand}'),
+        title: Text(brand),
         actions: [
           IconButton(
             icon: Icon(Icons.search),

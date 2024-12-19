@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:stylefront/widgets/favorites.dart'; 
-import 'package:stylefront/provider/favorite_provider.dart';
-import 'package:stylefront/pages/Productdetailpage.dart';
 
 class Favoritespage extends StatefulWidget {
   const Favoritespage({super.key});

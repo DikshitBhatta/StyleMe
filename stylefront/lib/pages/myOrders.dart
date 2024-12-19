@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class MyOrdersPage extends StatelessWidget {
+  const MyOrdersPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final orderProvider = Provider.of<OrderProvider>(context);

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stylefront/methods/openpagefavorite.dart';
 import 'package:stylefront/widgets/settings.dart';
-import 'package:stylefront/widgets/favorites.dart';
 import 'package:stylefront/widgets/overview.dart';
 
 class Profile extends StatefulWidget {

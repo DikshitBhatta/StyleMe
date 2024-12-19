@@ -6,9 +6,9 @@ class buildJustForYouSection extends StatefulWidget {
   final Map<String, dynamic>? productData;
 
   const buildJustForYouSection({
-    Key? key,
+    super.key,
     required this.productData,
-  }) : super(key: key);
+  });
 
   @override
   _buildJustForYouSectionState createState() => _buildJustForYouSectionState();
@@ -28,7 +28,7 @@ class _buildJustForYouSectionState extends State<buildJustForYouSection> {
       List<Map<String, dynamic>> allStyles = await DataParser.loadAllStyles();
       String? subCategory = widget.productData?['subCategory']?['typeName'];
       String? gender = widget.productData?['gender'];
-      if (subCategory != null && gender != null && mounted) {
+      if (gender != null && mounted) {
         setState(() {
           justForYouProducts = allStyles
               .where((style) => style['subCategory']?['typeName'] == subCategory && style['gender'] == gender)
