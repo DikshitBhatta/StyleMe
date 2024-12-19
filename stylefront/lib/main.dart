@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stylefront/pages/home.dart';
 import 'package:stylefront/pages/onboarding/onboarding_screen.dart';
+import 'package:stylefront/provider/auth_provider.dart';
 import 'package:stylefront/provider/cart_provider.dart';
 import 'package:stylefront/provider/favorite_provider.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:stylefront/provider/order_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => cartProvider),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
@@ -43,7 +45,19 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: const [
             KhaltiLocalizations.delegate,
           ],
-          home: OnboardingScreen()
+          home: Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              if (authProvider.isLoading) {
+                return Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              } else if (authProvider.user != null) {
+                return Home();
+              } else {
+                return OnboardingScreen();
+              }
+            },
+          ),
         );
       },
     );

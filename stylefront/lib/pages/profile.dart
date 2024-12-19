@@ -34,21 +34,21 @@ class _ProfileState extends State<Profile> {
   }
 
   // Method to handle sign out
-  Future<void> _signOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      // Navigate to SignInScreen and remove all previous routes
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SignInScreen()),
-      );
-    } catch (e) {
-      // Handle sign out errors if any
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error signing out. Please try again.')),
-      );
-    }
-  }
+  // Future<void> _signOut() async {
+  //   try {
+  //     await FirebaseAuth.instance.signOut();
+  //     // Navigate to SignInScreen and remove all previous routes
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => SignInScreen()),
+  //     );
+  //   } catch (e) {
+  //     // Handle sign out errors if any
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Error signing out. Please try again.')),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -157,26 +157,26 @@ class _ProfileState extends State<Profile> {
             showSettings ? const Settings() : const Overview(),
             const SizedBox(height: 40.0),
             // Sign Out Button
-            Center(
-              child: ElevatedButton(
-                onPressed: _signOut,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                child: const Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
+            // Center(
+            //   child: ElevatedButton(
+            //     onPressed: _signOut,
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.red,
+            //       padding:
+            //           const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(8.0),
+            //       ),
+            //     ),
+            //     child: const Text(
+            //       'Sign Out',
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: 16,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20), // Space at the bottom
           ],
         ),

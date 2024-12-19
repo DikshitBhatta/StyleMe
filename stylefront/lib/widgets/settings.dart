@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:stylefront/pages/authentication/signin.dart'; 
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
+
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignInScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error signing out. Please try again.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +51,7 @@ class Settings extends StatelessWidget {
         const SizedBox(height: 20),
         Center(
           child: TextButton(
-            onPressed: () {},
+            onPressed: () => _signOut(context), // Use the method within the widget
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
               shape: RoundedRectangleBorder(

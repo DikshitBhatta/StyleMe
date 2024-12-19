@@ -8,6 +8,8 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  camera: ^0.11.0
+  speech_to_text: ^7.0.0
   html: ^0.15.0
   shared_preferences: ^2.0.18
   provider: ^6.1.2

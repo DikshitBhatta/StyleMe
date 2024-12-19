@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import '../home.dart';
 import 'signin.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:stylefront/provider/auth_provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -20,6 +22,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // Firebase Auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   // Method to sign up with email and password
   Future<void> _signUpWithEmailAndPassword() async {
@@ -99,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         height: double.infinity, // Ensure the container fills the screen
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF1A1A1A), Colors.black],
+            colors: [Color(0xFF023C45), Color(0xFF1A1A1A)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -182,7 +186,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _passwordController,
                   labelText: 'Password',
                   prefixIcon: Icons.lock,
-                  obscureText: true,
+                  obscureText: !_passwordVisible,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
                 SizedBox(height: spacing),
                 // Confirm Password Field
@@ -190,7 +205,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _confirmPasswordController,
                   labelText: 'Confirm Password',
                   prefixIcon: Icons.lock_outline,
-                  obscureText: true,
+                  obscureText: !_confirmPasswordVisible,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _confirmPasswordVisible = !_confirmPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
                 SizedBox(height: spacing),
                 // Sign Up Button
@@ -200,7 +226,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     backgroundColor: Color(0xFF1D9BF0),
                     minimumSize: Size(double.infinity, 50),
                   ),
-                  child: Text('Sign Up'),
+                  child: Text('Sign Up',style: TextStyle(color: Colors.white),),
                 ),
                 SizedBox(height: spacing * 2),
                 // Sign In Text
@@ -263,6 +289,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     required String labelText,
     required IconData prefixIcon,
     bool obscureText = false,
+    Widget? suffixIcon,
   }) {
     return TextField(
       controller: controller,
@@ -272,6 +299,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         labelText: labelText,
         labelStyle: TextStyle(color: Color(0xFFB0B0B0)),
         prefixIcon: Icon(prefixIcon, color: Colors.white),
+        suffixIcon: suffixIcon,
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),

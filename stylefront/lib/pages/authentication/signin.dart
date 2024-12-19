@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import '../home.dart';
 import 'signup.dart'; // Import the signup page
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:stylefront/provider/auth_provider.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,6 +20,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   // Firebase Auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _passwordVisible = false;
 
   // Method to sign in with email and password
   Future<void> _signInWithEmailAndPassword() async {
@@ -95,7 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Color(0xFF1A1A1A)],
+            colors: [Color(0xFF023C45), Color(0xFF1A1A1A)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -169,7 +172,18 @@ class _SignInScreenState extends State<SignInScreen> {
                 controller: _passwordController,
                 labelText: 'Password',
                 prefixIcon: Icons.lock,
-                obscureText: true,
+                obscureText: !_passwordVisible,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _passwordVisible = !_passwordVisible;
+                    });
+                  },
+                ),
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -191,7 +205,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   backgroundColor: Color(0xFF1D9BF0),
                   minimumSize: Size(double.infinity, 50),
                 ),
-                child: Text('Sign In'),
+                child: Text('Sign In',style: TextStyle(color: Colors.white),),
               ),
               SizedBox(height: spacing * 2),
               // Sign Up Text
@@ -253,6 +267,7 @@ class _SignInScreenState extends State<SignInScreen> {
     required String labelText,
     required IconData prefixIcon,
     bool obscureText = false,
+    Widget? suffixIcon,
   }) {
     return TextField(
       controller: controller,
@@ -262,6 +277,7 @@ class _SignInScreenState extends State<SignInScreen> {
         labelText: labelText,
         labelStyle: TextStyle(color: Color(0xFFB0B0B0)),
         prefixIcon: Icon(prefixIcon, color: Colors.white),
+        suffixIcon: suffixIcon,
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
