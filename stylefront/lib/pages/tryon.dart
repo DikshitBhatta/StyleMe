@@ -4,8 +4,9 @@ import 'package:http/http.dart' as http;
 
 class TryOnPage extends StatefulWidget {
   final String imagePath;
+  final String productImageUrl;
 
-  const TryOnPage({super.key, required this.imagePath});
+  const TryOnPage({super.key, required this.imagePath, required this.productImageUrl});
 
   @override
   _TryOnPageState createState() => _TryOnPageState();
@@ -25,9 +26,10 @@ class _TryOnPageState extends State<TryOnPage> {
     try {
       await Future.delayed(Duration(seconds: 3));
       final response = await http.post(
-        Uri.parse('http://example.com/process-image'),//place backend api call here
+        Uri.parse('http://example.com/process-image'), // Replace with actual backend API
         body: {
           'image': File(widget.imagePath).readAsBytesSync(),
+          'productImage': widget.productImageUrl,
         },
       );
 

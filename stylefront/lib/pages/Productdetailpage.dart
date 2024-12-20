@@ -69,10 +69,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
+        final String imageUrl = 'assets/images/${widget.productId}.jpg';
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TryOnPage(imagePath: pickedFile.path),
+            builder: (context) => TryOnPage(imagePath: pickedFile.path, productImageUrl: imageUrl),
           ),
         );
       }
