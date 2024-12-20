@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:image_picker/image_picker.dart';
 import 'package:stylefront/methods/opencart.dart';
 import 'package:stylefront/widgets/Rating.dart';
 import 'package:stylefront/provider/cart_provider.dart';
@@ -11,6 +12,8 @@ import 'package:stylefront/utility/csv.dart';
 import 'package:html/parser.dart' as html_parser; 
 import 'package:stylefront/widgets/justforyou.dart';
 import 'package:stylefront/pages/searchpage.dart';
+import 'package:http/http.dart' as http;
+import 'package:stylefront/pages/tryon.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
@@ -24,6 +27,7 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   Map<String, dynamic>? productData;
   List<String> productImages = [];
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -57,6 +61,52 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       context,
       MaterialPageRoute(
         builder: (context) => SearchPage(query: query),
+      ),
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await _picker.pickImage(source: source);
+      if (pickedFile != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TryOnPage(imagePath: pickedFile.path),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
+
+  void _showImageSourceDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select Image Source'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.camera),
+              title: Text('Camera'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text('Gallery'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -176,9 +226,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               style: const TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 8.0),
-            Text(
-              'NRP ${productData?['price']}',
-              style: const TextStyle(fontSize: 20, color: Color(0xFFFF4B9E)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'NRP ${productData?['price']}',
+                  style: const TextStyle(fontSize: 20, color: Color(0xFFFF4B9E)),
+                ),
+                ElevatedButton(
+                  onPressed: _showImageSourceDialog,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text('Try On', style: TextStyle(color: Colors.white)),
+                ),
+              ],
             ),
             if (productData?['price'] != productData?['discountedPrice'])
               Text(
