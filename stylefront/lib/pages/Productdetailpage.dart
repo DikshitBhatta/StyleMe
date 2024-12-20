@@ -12,7 +12,7 @@ import 'package:stylefront/utility/csv.dart';
 import 'package:html/parser.dart' as html_parser; 
 import 'package:stylefront/widgets/justforyou.dart';
 import 'package:stylefront/pages/searchpage.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:stylefront/pages/tryon.dart';
 
 class ProductDetailPage extends StatefulWidget {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stylefront/widgets/favorites.dart';
-import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/pages/searchpage.dart';
 

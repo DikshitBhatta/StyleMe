@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
+
 import '../home.dart';
 import 'signup.dart'; // Import the signup page
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:stylefront/provider/auth_provider.dart';
+
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

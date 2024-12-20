@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stylefront/methods/openbrands.dart';
-import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/models/datamodels.dart';
-import 'package:stylefront/utility/csv.dart';
 import 'package:stylefront/methods/productfromcsv.dart';
 
 
