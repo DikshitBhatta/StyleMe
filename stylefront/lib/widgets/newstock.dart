@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:stylefront/models/datamodels.dart';
-
 import 'package:stylefront/pages/Productdetailpage.dart';
 import 'package:stylefront/methods/productfromcsv.dart';
 
 class NewInStockSection extends StatelessWidget {
   const NewInStockSection({super.key});
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
