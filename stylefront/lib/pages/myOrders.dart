@@ -110,10 +110,4 @@ class MyOrdersPage extends StatelessWidget {
     final orders = prefs.getStringList('orders') ?? [];
     orderProvider.loadOrders(orders);
   }
-
-  Future<void> _saveOrders(OrderProvider orderProvider) async {
-    final prefs = await SharedPreferences.getInstance();
-    final orders = orderProvider.orders.map((order) => jsonEncode(order)).toList();
-    prefs.setStringList('orders', orders);
-  }
 }
