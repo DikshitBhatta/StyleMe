@@ -11,6 +11,10 @@ import 'package:stylefront/methods/openallProduct.dart';
 import 'package:stylefront/pages/home.dart';
 import 'package:stylefront/pages/searchpage.dart';
 import 'package:stylefront/provider/homepagestate.dart';
+import 'package:stylefront/pages/categories.dart';
+import 'package:stylefront/methods/openallProduct.dart';
+import 'package:stylefront/pages/product.dart';
+import 'package:stylefront/pages/new_products.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -46,6 +50,26 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
     );
   }
 
+  Future<void> _onCategorySelected(BuildContext context, String category) async {
+    if (category == 'Collections') {
+      await openallProduct(context);
+    } else if (category == 'New Products') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NewProductsPage(),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoriesPage(category: category),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -76,7 +100,7 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
               PopupMenuButton<Titledropdown>(
                 icon: Icon(Icons.arrow_drop_down),
                 onSelected: (valueselected) {
-                  print('${valueselected.title}');
+                  _onCategorySelected(context, valueselected.title!);
                 },
                 itemBuilder: (BuildContext context) {
                   return Catalogue.map((Titledropdown titledropdown) {

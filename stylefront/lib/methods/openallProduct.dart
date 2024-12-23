@@ -4,7 +4,7 @@ import 'package:stylefront/models/datamodels.dart';
 import 'package:stylefront/utility/csv.dart';
 
 
-void openallProduct(BuildContext context, {bool fullscreenDialog = false}) async{
+openallProduct(BuildContext context, {bool fullscreenDialog = false}) async{
    WidgetsFlutterBinding.ensureInitialized();
 
   // Load the CSV data

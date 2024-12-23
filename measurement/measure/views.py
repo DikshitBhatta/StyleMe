@@ -28,9 +28,13 @@ class LiveMeasurementView(APIView):
             return Response({"error": "Invalid data provided."}, status=400)
 
         # Decode the image from base64
-        image_bytes = base64.b64decode(image_data)
-        image = Image.open(BytesIO(image_bytes))
-        frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        try:
+            image_bytes = base64.b64decode(image_data)
+            image = Image.open(BytesIO(image_bytes))
+            frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        except Exception as e:
+            logger.error("Failed to decode image: %s", str(e))
+            return Response({"error": "Invalid image data."}, status=400)
 
         # Process the frame using MediaPipe Pose
         with mp_pose.Pose(static_image_mode=False, model_complexity=1) as pose:
@@ -41,7 +45,15 @@ class LiveMeasurementView(APIView):
                 landmarks = results.pose_landmarks.landmark
                 frame_height = frame.shape[0]
 
-                # Calculate scaling factor
+                # Ensure both ankles are detected before proceeding
+                if (
+                    landmarks[mp_pose.PoseLandmark.LEFT_ANKLE].visibility < 0.5 or
+                    landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE].visibility < 0.5
+                ):
+                    logger.error("Both ankles must be detected for accurate calculation.")
+                    return Response({"error": "Both ankles must be detected for calculation."}, status=400)
+
+                # Calculate scaling factor and measurements
                 scaling_factor = self.calculate_scaling_factor(landmarks, frame_height, user_height_cm)
                 shoulder_width, hip_width = self.calculate_measurements(landmarks, frame_height, scaling_factor)
                 inseam = self.calculate_inseam(landmarks, frame_height, scaling_factor)

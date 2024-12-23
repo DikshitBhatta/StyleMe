@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'sign_in_screen.dart';
+import 'package:stylefront/pages/authentication/signin.dart';
 import '../widgets/splash_painter.dart';
 
 class OnboardingScreen extends StatefulWidget {

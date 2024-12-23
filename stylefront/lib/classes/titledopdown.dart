@@ -5,13 +5,12 @@ class Titledropdown {
 }
 
 List<Titledropdown> Catalogue = [
-  Titledropdown(title: 'Blazers'),
-  Titledropdown(title: 'Dresses'),
-  Titledropdown(title: 'Nightwear'),
-  Titledropdown(title: 'Tshirt'),
-  Titledropdown(title: 'Coats'),
+  Titledropdown(title: 'Tshirts'),
+  Titledropdown(title: 'Formal'),
   Titledropdown(title: 'Sports'),
   Titledropdown(title: 'Shirts'),
-  Titledropdown(title: 'Collections'),
+  Titledropdown(title: 'Ethnic'),
   Titledropdown(title: 'New Products'),
+  Titledropdown(title: 'Collections'),
+ 
 ];
