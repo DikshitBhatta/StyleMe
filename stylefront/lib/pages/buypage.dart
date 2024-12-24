@@ -3,8 +3,8 @@ import 'package:stylefront/pages/paymentpage.dart';
 import 'package:stylefront/pages/shippingaddress.dart';
 import 'package:stylefront/payment/esewa.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
-import 'package:stylefront/payment/khaltipage.dart'; 
-
+import 'package:stylefront/payment/khaltipage.dart';
+import 'package:stylefront/pages/payment_successful.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
@@ -181,7 +181,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ? widget.selectedItems[0]['name']
                       : 'Product';
                   Esewa esewa = Esewa(product: widget.selectedItems[0]);
-                  esewa.initiatePayment(productName, totalPrice.toString(), context);
+                  esewa.initiatePayment(productName, totalPrice.toString(), context).then((success) {
+                    if (success) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentSuccessfulPage(product: widget.selectedItems[0]),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Payment failed!')),
+                      );
+                    }
+                  });
                 } else if (selectedPaymentMethod == 'Khalti') {
                   Navigator.push(
                     context,
@@ -191,7 +204,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         product: widget.selectedItems[0],
                       ),
                     ),
-                  );
+                  ).then((success) {
+                    if (success) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentSuccessfulPage(product: widget.selectedItems[0]),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Payment failed!')),
+                      );
+                    }
+                  });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Please select a payment method!')),

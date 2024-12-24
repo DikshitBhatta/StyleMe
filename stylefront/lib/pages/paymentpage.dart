@@ -96,7 +96,6 @@ class _PaymentPageState extends State<PaymentPage> {
               },
             ),
             const SizedBox(height: 16),
-            // Conditionally show these fields only when "Credit card" is selected
             if (selectedPaymentMethod == 'Credit card') ...[
               TextField(
                 controller: cardHolderNameController,

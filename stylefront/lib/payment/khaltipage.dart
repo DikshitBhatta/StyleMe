@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:stylefront/provider/order_provider.dart';
+import 'package:stylefront/provider/notification_provider.dart';
+import 'package:stylefront/pages/payment_successful.dart';
 
 class KhaltiPaymentWidget extends StatelessWidget {
   final double totalPrice;
@@ -58,13 +60,29 @@ class KhaltiPaymentWidget extends StatelessWidget {
         PaymentPreference.khalti,
       ],
       onSuccess: (successModel) {
-        // Add the product to orders when payment is successful
         Provider.of<OrderProvider>(context, listen: false).addOrder(product);
+
+        final notificationProvider = Provider.of<NotificationProvider>(context, listen: false);
+        final message = 'Your order has been placed successfully!';
+        final imagePath = product['image'];
+        if (message.isNotEmpty && imagePath.isNotEmpty) {
+          notificationProvider.addNotification(message, imagePath);
+          print('Notification added: $message');
+          print('Image path: $imagePath');
+        } else {
+          print('Error: message or imagePath is empty');
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Payment Successful!')),
         );
-        Navigator.of(context).pop();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PaymentSuccessfulPage(product: product, addOrderAndNotification: false),
+          ),
+        );
       },
       onFailure: (failureModel) {
         ScaffoldMessenger.of(context).showSnackBar(

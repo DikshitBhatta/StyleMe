@@ -8,6 +8,7 @@ import 'package:stylefront/provider/favorite_provider.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:stylefront/provider/order_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:stylefront/provider/notification_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => cartProvider),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
       ],
       child: const MyApp(),

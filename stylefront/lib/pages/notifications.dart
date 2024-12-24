@@ -1,54 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:stylefront/provider/notification_provider.dart';
+import 'package:stylefront/pages/myOrders.dart';
 
-class Notifications extends StatefulWidget {
-  const Notifications({super.key});
+class NotificationManager with ChangeNotifier {
+  final List<String> _notifications = [];
 
-  @override
-  _NotificationsState createState() => _NotificationsState();
+  List<String> get notifications => _notifications;
+
+  void addNotification(String message) {
+    _notifications.add(message);
+    notifyListeners();
+  }
+
+  void clearNotifications() {
+    _notifications.clear();
+    notifyListeners();
+  }
+
+  void removeNotification(int index) {
+    _notifications.removeAt(index);
+    notifyListeners();
+  }
 }
 
-class _NotificationsState extends State<Notifications> {
-  List<String> notifications = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadNotifications();
-  }
-
-  Future<void> _loadNotifications() async {
-    final prefs = await SharedPreferences.getInstance();
-    final loadedNotifications = prefs.getStringList('notifications') ?? [];
-    print('Loaded notifications from SharedPreferences: $loadedNotifications');
-    setState(() {
-      notifications = loadedNotifications;
-    });
-    print('Notifications loaded: $notifications'); 
-  }
-
+class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Notifications')),
-        actions: <Widget>[
+        title: Text('Notifications'),
+        actions: [
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              Provider.of<NotificationProvider>(context, listen: false).clearNotifications();
+            },
           ),
         ],
       ),
-      body: notifications.isEmpty
-          ? const Center(child: Text('No notifications'))
-          : ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(notifications[index]),
+      body: Consumer<NotificationProvider>(
+        builder: (context, notificationProvider, child) {
+          print('Building NotificationScreen with notifications: ${notificationProvider.notifications}');
+          return notificationProvider.notifications.isEmpty
+              ? Center(
+                  child: Text(
+                    'No notifications yet!',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: notificationProvider.notifications.length,
+                  itemBuilder: (context, index) {
+                    final notification = notificationProvider.notifications[index];
+                    return ListTile(
+                      leading: Image.asset(notification.imagePath, width: 50, height: 50, fit: BoxFit.fill),
+                      title: Text(notification.message),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          notificationProvider.removeNotification(index);
+                        },
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyOrdersPage(),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 );
-              },
-            ),
+        },
+      ),
     );
   }
 }

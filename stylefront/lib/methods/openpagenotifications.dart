@@ -5,6 +5,6 @@ void openpagenotifications(BuildContext context, {bool fullscreenDialog = false}
   Navigator.push(context,
   MaterialPageRoute(
     fullscreenDialog: fullscreenDialog,
-    builder:(context) => Notifications(),
+    builder:(context) => NotificationScreen(),
   ));
 }

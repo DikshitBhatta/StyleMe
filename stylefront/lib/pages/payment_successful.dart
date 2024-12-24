@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stylefront/provider/order_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:stylefront/pages/Productdetailpage.dart';
+import 'package:stylefront/provider/order_provider.dart';
+import 'package:stylefront/provider/notification_provider.dart';
 
 class PaymentSuccessfulPage extends StatelessWidget {
   final Map<String, dynamic> product;
+  final bool addOrderAndNotification;
 
-  const PaymentSuccessfulPage({super.key, required this.product});
+  const PaymentSuccessfulPage({super.key, required this.product, this.addOrderAndNotification = true});
 
   @override
   Widget build(BuildContext context) {
-    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    if (addOrderAndNotification) {
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      final notificationProvider = Provider.of<NotificationProvider>(context, listen: false);
 
-    orderProvider.addOrder(product);
-    _saveOrders(orderProvider); 
-    Future.delayed(Duration(seconds: 1), () {
-      print('Attempting to save notification...');
-      _saveNotifications('Your order has been placed successfully!');
-    });
+      if (!orderProvider.orders.contains(product)) {
+        orderProvider.addOrder(product);
+        _saveOrders(orderProvider);
+
+        Future.delayed(Duration(seconds: 1), () {
+          final message = 'Your order has been placed successfully!';
+          final imagePath = product['image'];
+          if (message.isNotEmpty && imagePath.isNotEmpty) {
+            notificationProvider.addNotification(message, imagePath);
+            print('Notification added in PaymentSuccessfulPage: $message'); // Debug print
+            print('Image path: $imagePath'); // Debug print
+          } else {
+            print('Error: message or imagePath is empty'); // Debug print
+          }
+        });
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +51,18 @@ class PaymentSuccessfulPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                final productId = product['id'];
+                if (productId is int) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(productId: productId),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                } else {
+                  print('Error: product id is not valid');
+                }
               },
               child: const Text('Continue Shopping'),
             ),
@@ -50,14 +77,5 @@ class PaymentSuccessfulPage extends StatelessWidget {
     final orders = orderProvider.orders.map((order) => jsonEncode(order)).toList();
     prefs.setStringList('orders', orders);
     print('Orders saved: $orders'); 
-  }
-
-  Future<void> _saveNotifications(String message) async {
-    final prefs = await SharedPreferences.getInstance();
-    final notifications = prefs.getStringList('notifications') ?? [];
-    notifications.add(message);
-    await prefs.setStringList('notifications', notifications);
-    print('Notification saved: $message'); 
-    print('All notifications: $notifications');
   }
 }
