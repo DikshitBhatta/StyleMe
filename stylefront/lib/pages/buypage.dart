@@ -17,6 +17,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   String selectedPaymentMethod = 'Select payment method';
+  String selectedAddress = 'Select Address';
 
   @override
   Widget build(BuildContext context) {
@@ -69,38 +70,39 @@ class _CheckoutPageState extends State<CheckoutPage> {
               itemBuilder: (context, index) {
                 final item = widget.selectedItems[index];
                 return ListTile(
-                    leading: null,
-                    title:  Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 75.0,
-                                  width: 75.0,
-                                  child: Image.asset(
-                                    item['image'],
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                const SizedBox(width: 5.0),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        item['name'] ?? 'Product',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      Text('Price: ₹${item['price']}'),
-                                      const SizedBox(height: 4.0),
-                                      Text('Quantity: ${item['quantity']}'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                    subtitle: null,
-          
+                  leading: null,
+                  title: Flexible(
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 75.0,
+                          width: 75.0,
+                          child: Image.asset(
+                            item['image'],
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        const SizedBox(width: 5.0),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                item['name'] ?? 'Product',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4.0),
+                              Text('Price: ₹${item['price']}'),
+                              const SizedBox(height: 4.0),
+                              Text('Quantity: ${item['quantity']}'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  subtitle: null,
                 );
               },
             ),
@@ -112,7 +114,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ShippingAddressPage()),
+                MaterialPageRoute(
+                  builder: (context) => ShippingAddressPage(
+                    onAddressSelected: (address) {
+                      setState(() {
+                        selectedAddress = address;
+                      });
+                    },
+                  ),
+                ),
               );
             },
             child: Container(
@@ -123,8 +133,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text('Select Address', style: TextStyle(fontSize: 16)),
+                children: [
+                  Flexible(
+                    child: Text(selectedAddress, style: TextStyle(fontSize: 16)),
+                  ),
                   Icon(Icons.arrow_forward, color: Colors.black),
                 ],
               ),

@@ -12,6 +12,7 @@ import 'package:stylefront/provider/notification_provider.dart';
 import 'package:stylefront/providers/recommended_size_provider.dart'; // Correct import
 import 'package:stylefront/pages/scale.dart'; // Import Scale widget
 import 'package:stylefront/pages/posturemessage.dart'; // Import PostureMessagePage
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,6 +73,17 @@ class MyApp extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => Scale()),
                 );
               },
+            ),
+            '/map': (context) => Scaffold(
+              appBar: AppBar(
+                title: Text('Google Maps'),
+              ),
+              body: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(45.521563, -122.677433),
+                  zoom: 11.0,
+                ),
+              ),
             ),
           },
         );

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'map_picker.dart';
 
 class ShippingAddressPage extends StatefulWidget {
-  const ShippingAddressPage({super.key});
+  final Function(String) onAddressSelected;
+
+  const ShippingAddressPage({super.key, required this.onAddressSelected});
 
   @override
   _ShippingAddressPageState createState() => _ShippingAddressPageState();
@@ -73,6 +77,31 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     }
   }
 
+  void _openMapPicker() async {
+    LatLng? selectedLocation = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MapPicker(
+          onLocationSelected: (LatLng location) {
+            setState(() {
+              addressController.text = '${location.latitude}, ${location.longitude}';
+            });
+          },
+        ),
+      ),
+    );
+
+    if (selectedLocation != null) {
+      List<Placemark> placemarks = await placemarkFromCoordinates(selectedLocation.latitude, selectedLocation.longitude);
+      Placemark place = placemarks[0];
+      setState(() {
+        addressController.text = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea}, ${place.postalCode}, ${place.country}';
+        cityController.text = place.locality ?? '';
+        stateController.text = place.administrativeArea ?? '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,12 +152,22 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: addressController,
-                decoration: const InputDecoration(
-                  labelText: 'Address',
-                  border: UnderlineInputBorder(),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: addressController,
+                      decoration: const InputDecoration(
+                        labelText: 'Address',
+                        border: UnderlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.map),
+                    onPressed: _openMapPicker,
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               TextField(
@@ -167,19 +206,9 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                     ),
                   ),
                   onPressed: () {
-                    String firstName = firstNameController.text;
-                    String lastName = lastNameController.text;
                     String address = addressController.text;
-                    String city = cityController.text;
-                    String state = stateController.text;
-                    String phone = phoneController.text;
-
-                    print('First Name: $firstName');
-                    print('Last Name: $lastName');
-                    print('Address: $address');
-                    print('City: $city');
-                    print('State: $state');
-                    print('Phone: $phone');
+                    widget.onAddressSelected(address);
+                    Navigator.of(context).pop();
                   },
                   child: const Text(
                     'Add address',
