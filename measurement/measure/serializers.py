@@ -10,3 +10,6 @@ class MeasurementOutputSerializer(serializers.Serializer):
     hip_width = serializers.FloatField()
     height = serializers.FloatField()
     inseam = serializers.FloatField()
+    chest_width = serializers.FloatField()  # New field
+    torso_length_cm = serializers.FloatField()
+    recommended_size = serializers.CharField(max_length=10)

@@ -60,6 +60,7 @@ flutter:
     - assets/icons/
     - assets/styles/
     - assets/payment/
+    - assets/posture/posture.png
 
 dependency_overrides:
   intl: ^0.19.0

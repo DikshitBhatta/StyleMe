@@ -9,6 +9,9 @@ import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:stylefront/provider/order_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:stylefront/provider/notification_provider.dart';
+import 'package:stylefront/providers/recommended_size_provider.dart'; // Correct import
+import 'package:stylefront/pages/scale.dart'; // Import Scale widget
+import 'package:stylefront/pages/posturemessage.dart'; // Import PostureMessagePage
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => cartProvider),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
+        ChangeNotifierProvider(create: (_) => RecommendedSizeProvider()), // Correct usage
       ],
       child: const MyApp(),
     ),
@@ -60,6 +64,16 @@ class MyApp extends StatelessWidget {
               }
             },
           ),
+          routes: {
+            '/scale': (context) => PostureMessagePage(
+              onProceed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Scale()),
+                );
+              },
+            ),
+          },
         );
       },
     );

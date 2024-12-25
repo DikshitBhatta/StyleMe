@@ -3,6 +3,8 @@ import 'package:camera/camera.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
+import 'package:provider/provider.dart';
+import '../providers/recommended_size_provider.dart';
 
 class Scale extends StatefulWidget {
   const Scale({Key? key}) : super(key: key);
@@ -51,14 +53,14 @@ class _ScaleState extends State<Scale> {
     super.dispose();
   }
 
-  void toggleCamera() {
+  void toggleCamera() async {
     setState(() {
       _lensDirection = _lensDirection == CameraLensDirection.back
           ? CameraLensDirection.front
           : CameraLensDirection.back;
       _isCameraInitialized = false;
     });
-    initializeCamera();
+    await initializeCamera();
   }
 
   Future<void> captureAndMeasure() async {
@@ -99,10 +101,15 @@ class _ScaleState extends State<Scale> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        Provider.of<RecommendedSizeProvider>(context, listen: false)
+            .setRecommendedSize(data['recommended_size'] ?? 'Unknown');
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MeasurementResultPage(data: data),
+            builder: (context) => MeasurementResultPage(
+              data: data,
+              recommendedSize: data['recommended_size'] ?? 'Unknown',
+            ),
           ),
         );
       } else {
@@ -125,96 +132,96 @@ class _ScaleState extends State<Scale> {
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Size Measurement'),
-    ),
-    body: Column(
-      children: [
-        if (_isCameraInitialized)
-          Expanded(
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: _lensDirection == CameraLensDirection.front
-                      ? Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(math.pi),
-                          child: CameraPreview(_controller),
-                        )
-                      : CameraPreview(_controller),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: FloatingActionButton(
-                    onPressed: toggleCamera,
-                    backgroundColor: Color(0xFF023C45),
-                    child: Icon(Icons.cameraswitch,color: Colors.white,),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Size Measurement'),
+      ),
+      body: Column(
+        children: [
+          if (_isCameraInitialized)
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: _lensDirection == CameraLensDirection.front
+                        ? Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationY(math.pi),
+                            child: CameraPreview(_controller),
+                          )
+                        : CameraPreview(_controller),
                   ),
-                ),
-                if (_isCountingDown)
-                  Center(
-                    child: Text(
-                      '$_countdown',
-                      style: TextStyle(
-                        fontSize: 50,
-                        color: Colors.white,
-                      ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: FloatingActionButton(
+                      onPressed: toggleCamera,
+                      backgroundColor: Color(0xFF023C45),
+                      child: Icon(Icons.cameraswitch, color: Colors.white),
                     ),
                   ),
+                  if (_isCountingDown)
+                    Center(
+                      child: Text(
+                        '$_countdown',
+                        style: TextStyle(
+                          fontSize: 50,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            )
+          else
+            Expanded(child: Center(child: CircularProgressIndicator())),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _heightController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your height in cm',
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF023C45),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    onPressed: captureAndMeasure,
+                    child: Text(
+                      'Get Measurement',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
               ],
             ),
-          )
-        else
-          Expanded(child: Center(child: CircularProgressIndicator())),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _heightController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Enter your height in cm',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF023C45),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                  onPressed: captureAndMeasure,
-                  child: Text(
-                    'Get Measurement',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 }
 
 class MeasurementResultPage extends StatelessWidget {
   final Map<String, dynamic> data;
+  final String? recommendedSize;
 
-  const MeasurementResultPage({Key? key, required this.data}) : super(key: key);
+  const MeasurementResultPage({Key? key, required this.data, required this.recommendedSize}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -234,6 +241,12 @@ class MeasurementResultPage extends StatelessWidget {
             Text('Inseam: ${data['inseam_cm']} cm', style: TextStyle(fontSize: 18)),
             SizedBox(height: 10),
             Text('Scaling Factor: ${data['scaling_factor']}', style: TextStyle(fontSize: 18)),
+            SizedBox(height: 10),
+            Text('Chest width: ${data['chest_width_cm']} cm', style: TextStyle(fontSize: 18)),
+            SizedBox(height: 10),
+            Text('Torso length: ${data['torso_length_cm']} cm', style: TextStyle(fontSize: 18)),
+            SizedBox(height: 10),
+            Text('Recommended Size: $recommendedSize', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:stylefront/pages/profile.dart';
 import 'package:stylefront/pages/scale.dart';
 import 'package:stylefront/pages/shop.dart';
 import 'package:stylefront/pages/homepage.dart';
+import 'package:stylefront/pages/posturemessage.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -22,7 +23,11 @@ class _Homestate extends State<Home> {
     super.initState();
     _listpages = <Widget>[
       PageStorage(key: PageStorageKey('Homepage'), bucket: bucket, child: Homepage()),
-      Scale(),
+      Builder(
+        builder: (context) {
+          return Scale();
+        },
+      ),
       Cart(),
       Profile(),
     ];
@@ -32,11 +37,25 @@ class _Homestate extends State<Home> {
     setState(() {
       selectedIndex = index;
     });
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PostureMessagePage(
+            onProceed: () {
+              Navigator.pop(context);
+              setState(() {
+                selectedIndex = 1;
+              });
+            },
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _refreshPage() async {
     await Future.delayed(const Duration(seconds: 0));
-    // Force reload the app
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const Home()),

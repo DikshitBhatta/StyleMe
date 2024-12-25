@@ -12,8 +12,6 @@ import 'package:stylefront/pages/home.dart';
 import 'package:stylefront/pages/searchpage.dart';
 import 'package:stylefront/provider/homepagestate.dart';
 import 'package:stylefront/pages/categories.dart';
-import 'package:stylefront/methods/openallProduct.dart';
-import 'package:stylefront/pages/product.dart';
 import 'package:stylefront/pages/new_products.dart';
 
 class Homepage extends StatefulWidget {

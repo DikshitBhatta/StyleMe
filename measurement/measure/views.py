@@ -8,6 +8,8 @@ import base64
 from PIL import Image
 from io import BytesIO
 import logging
+from django.http import JsonResponse
+import base64
 
 # Initialize MediaPipe Pose
 mp_pose = mp.solutions.pose
@@ -53,20 +55,36 @@ class LiveMeasurementView(APIView):
                     logger.error("Both ankles must be detected for accurate calculation.")
                     return Response({"error": "Both ankles must be detected for calculation."}, status=400)
 
+                # Apply offset for head estimation and vertical torso adjustment
+                # landmarks = self.apply_offsets_for_head_and_torso(landmarks)
+
                 # Calculate scaling factor and measurements
                 scaling_factor = self.calculate_scaling_factor(landmarks, frame_height, user_height_cm)
                 shoulder_width, hip_width = self.calculate_measurements(landmarks, frame_height, scaling_factor)
                 inseam = self.calculate_inseam(landmarks, frame_height, scaling_factor)
+                chest_width = self.calculate_chest_width(landmarks, frame_height, scaling_factor)
+                torso_length = self.calculate_torso_length(landmarks, frame_height, scaling_factor)
+                shoulder_width = round(shoulder_width)
+                hip_width = round(hip_width)
+                user_height_cm = round(user_height_cm)
+                inseam = round(inseam)
+                chest_width = round(chest_width)
+                torso_length = round(torso_length)
+                recommended_size = self.recommend_size(chest_width, torso_length)
 
-                logger.info("Measurements calculated: shoulder_width=%s, hip_width=%s, inseam=%s, scaling_factor=%s",
-                            shoulder_width, hip_width, inseam, scaling_factor)
+                # Additional measurements
+                logger.info("Measurements calculated: shoulder_width=%s, hip_width=%s, inseam=%s, scaling_factor=%s, torso_length=%s, chest_width=%s",
+                            shoulder_width, hip_width, inseam, scaling_factor, torso_length, chest_width)
 
                 return Response({
                     "shoulder_width_cm": shoulder_width,
                     "hip_width_cm": hip_width,
                     "height_cm": user_height_cm,
                     "inseam_cm": inseam,
-                    "scaling_factor": scaling_factor,
+                    "scaling_factor": round(scaling_factor, 2),
+                    "torso_length_cm": torso_length,
+                    "chest_width_cm": chest_width,
+                    "recommended_size": recommended_size,  # Ensure this key is included
                 })
 
             logger.error("Pose landmarks not detected.")
@@ -111,7 +129,58 @@ class LiveMeasurementView(APIView):
         inseam_px = abs(mid_ankle_y - mid_hip_y)
         return inseam_px * scaling_factor
 
-from django.http import JsonResponse
+    def calculate_torso_length(self, landmarks, frame_height, scaling_factor):
+        # Using the midpoint between shoulders and hips to estimate torso length
+        left_shoulder = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER]
+        left_hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP]
+
+        torso_length_px = abs(left_shoulder.y - left_hip.y) * frame_height
+        return (torso_length_px * scaling_factor)+18
+
+    def calculate_chest_width(self, landmarks, frame_height, scaling_factor):
+        # Calculate shoulder-to-shoulder width in pixels
+        right_shoulder = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER]
+        left_shoulder = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER]
+        left_hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP]
+
+        # Calculate shoulder width in pixels
+        shoulder_width_px = abs(left_shoulder.x - right_shoulder.x) * frame_height
+        shoulder_width = shoulder_width_px * scaling_factor
+
+        # Calculate torso length (distance from shoulder to hip) in pixels
+        torso_length_px = abs(left_shoulder.y - left_hip.y) * frame_height
+        torso_length = torso_length_px * scaling_factor
+
+        # Refine chest width based on torso length (using weighted average)
+        chest_width = shoulder_width * 0.75 + torso_length * 0.25  # Weighted average of shoulder width and torso length
+
+        return chest_width
+
+    def recommend_size(self, chest_width, torso_length):
+        # Define size charts for T-shirt, pants, etc.
+        size_chart_tshirt = {
+        "S": {"chest_width": (46, 48), "torso_length": (71, 73)},
+        "M": {"chest_width": (49, 51), "torso_length": (74, 76)},
+        "L": {"chest_width": (52, 54), "torso_length": (77, 79)},
+        "XL": {"chest_width": (55, 57), "torso_length": (80, 82)},
+        "2XL": {"chest_width": (58, 60), "torso_length": (83, 85)},
+        "3XL": {"chest_width": (61, 63), "torso_length": (86, 88)},
+        "4XL": {"chest_width": (64, 66), "torso_length": (89, 91)},
+        "5XL": {"chest_width": (67, 69), "torso_length": (92, 94)}
+    }
+
+        # Check if both chest width and torso length fall within the same size range
+        for size, values in size_chart_tshirt.items():
+            if (values["chest_width"][0] <= chest_width <= values["chest_width"][1] and
+                    values["torso_length"][0] <= torso_length <= values["torso_length"][1]):
+                return size
+
+        # If they fall into different ranges, recommend based on chest width
+        for size, values in size_chart_tshirt.items():
+            if values["chest_width"][0] <= chest_width <= values["chest_width"][1]:
+                return size
+
+        return "Size not found"
 
 def test_view(request):
     return JsonResponse({"message": "Measure app is working!"})

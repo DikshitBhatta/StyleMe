@@ -12,13 +12,13 @@ import 'package:stylefront/utility/csv.dart';
 import 'package:html/parser.dart' as html_parser; 
 import 'package:stylefront/widgets/justforyou.dart';
 import 'package:stylefront/pages/searchpage.dart';
-
 import 'package:stylefront/pages/tryon.dart';
+import '../providers/recommended_size_provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
-  final int productId;
+  final int? productId;
 
-  const ProductDetailPage({super.key, required this.productId});
+  const ProductDetailPage({super.key, this.productId});
 
   @override
   _ProductDetailPageState createState() => _ProductDetailPageState();
@@ -28,16 +28,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Map<String, dynamic>? productData;
   List<String> productImages = [];
   final ImagePicker _picker = ImagePicker();
+  String? selectedSize;
 
   @override
   void initState() {
     super.initState();
     _loadProductDetails();
+    selectedSize = Provider.of<RecommendedSizeProvider>(context, listen: false).recommendedSize;
   }
 
   Future<void> _loadProductDetails() async {
     try {
-      final String response = await rootBundle.loadString('assets/styles/${widget.productId}.json');
+      final String response = await rootBundle.loadString('assets/styles/${widget.productId ?? 'default'}.json');
       final Map<String, dynamic> data = jsonDecode(response);
       if (mounted) {
         setState(() {
@@ -69,7 +71,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-        final String imageUrl = 'assets/images/${widget.productId}.jpg';
+        final String imageUrl = 'assets/images/${widget.productId ?? 'default'}.jpg';
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -145,9 +147,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final sizes = ['S', 'M', 'L', 'XL'];
+    final sizes = ['S', 'M', 'L', 'XL', '2X', '3X', '4X', '5X'];
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
-    final isFavorite = favoriteProvider.isFavorite(widget.productId);
+    final isFavorite = favoriteProvider.isFavorite(widget.productId ?? 0);
 
     if (productData == null) {
       return Scaffold(
@@ -156,7 +158,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       );
     }
 
-    final String imageUrl = 'assets/images/${widget.productId}.jpg';
+    final String imageUrl = 'assets/images/${widget.productId ?? 'default'}.jpg';
     return Scaffold(
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
@@ -202,10 +204,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 child: IconButton(
                   onPressed: () {
                     favoriteProvider.toggleFavorite({
-                      'id': widget.productId,
+                      'id': widget.productId ?? 0,
                       'name': productData?['productDisplayName'],
                       'price': productData?['price'],
-                      'image': 'assets/images/${widget.productId}.jpg',
+                      'image': 'assets/images/${widget.productId ?? 'default'}.jpg',
                     });
                   },
                   icon: Icon(
@@ -269,17 +271,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 const Text('Size Guide'),
                 Row(
                   children: sizes.map((size) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: Container(
-                        height: 25.0,
-                        width: 25.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black),
-                          shape: BoxShape.circle,
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedSize = size;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: Container(
+                          height: 25.0,
+                          width: 25.0,
+                          decoration: BoxDecoration(
+                            color: selectedSize == size ? Colors.blue : Colors.white,
+                            border: Border.all(color: Colors.black),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(child: Text(size)),
                         ),
-                        child: Center(child: Text(size)),
                       ),
                     );
                   }).toList(),
@@ -291,10 +300,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ElevatedButton(
                       onPressed: () {
                         final product = {
-                          'id': widget.productId,
+                          'id': widget.productId ?? 0,
                           'name': productData?['productDisplayName'],
                           'price': productData?['price'],
-                          'image': 'assets/images/${widget.productId}.jpg',
+                          'image': 'assets/images/${widget.productId ?? 'default'}.jpg',
                         };
                         Provider.of<CartProvider>(context, listen: false).addToCart(product);
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -318,7 +327,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         final selectedProduct = {
                           'name': productData?['productDisplayName'],
                           'price': productData?['price'],
-                          'image': 'assets/images/${widget.productId}.jpg',
+                          'image': 'assets/images/${widget.productId ?? 'default'}.jpg',
                           'quantity': 1,
                         };
                         Navigator.push(
