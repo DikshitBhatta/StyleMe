@@ -8,6 +8,7 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  cloud_firestore: ^5.6.0
   flutter:
     sdk: flutter
   google_maps_flutter: ^2.1.1
@@ -57,11 +58,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/styles/
     - assets/fashion_sample_5k.csv
     - assets/icons/LOGO_cropped.png
     - assets/icons/LOGOcolor.png
     - assets/icons/
-    - assets/styles/
     - assets/payment/
     - assets/posture/posture.png
 

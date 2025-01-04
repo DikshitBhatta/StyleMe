@@ -18,7 +18,7 @@ class PaymentSuccessfulPage extends StatelessWidget {
       final orderProvider = Provider.of<OrderProvider>(context, listen: false);
       final notificationProvider = Provider.of<NotificationProvider>(context, listen: false);
 
-      if (!orderProvider.orders.contains(product)) {
+      if (!orderProvider.orders.any((order) => order['productId'] == product['productId'])) {
         orderProvider.addOrder(product);
         _saveOrders(orderProvider);
 
@@ -51,8 +51,16 @@ class PaymentSuccessfulPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                final productId = product['id'];
-                if (productId is int) {
+                final productId = product['productId'];
+                if (productId is String) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(productId: int.tryParse(productId)), // Convert to int
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                } else if (productId is int) {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

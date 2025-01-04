@@ -214,7 +214,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       builder: (context) => KhaltiPaymentWidget(
                         totalPrice: totalPrice,
                         product: widget.selectedItems[0],
-
                       ),
                     ),
                   ).then((success) {

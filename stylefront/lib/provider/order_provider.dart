@@ -24,6 +24,10 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  bool hasBoughtProduct(String productId) {
+    return _orders.any((order) => order['productId'] == productId);
+  }
+
   Future<void> _saveOrders() async {
     final prefs = await SharedPreferences.getInstance();
     final orders = _orders.map((order) => jsonEncode(order)).toList();

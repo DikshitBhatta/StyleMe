@@ -41,14 +41,17 @@ class MyOrdersPage extends StatelessWidget {
                   final item = orders[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailPage(
-                            productId: item['id'],
+                      final productId = item['productId'] is int ? item['productId'] : int.tryParse(item['productId'].toString());
+                      if (productId != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailPage(productId: productId),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        print('Error: productId is null or invalid');
+                      }
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(

@@ -14,6 +14,8 @@ import 'package:stylefront/widgets/justforyou.dart';
 import 'package:stylefront/pages/searchpage.dart';
 import 'package:stylefront/pages/tryon.dart';
 import '../providers/recommended_size_provider.dart';
+import 'package:stylefront/methods/review.dart';
+import 'package:stylefront/models/review.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int? productId;
@@ -29,17 +31,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   List<String> productImages = [];
   final ImagePicker _picker = ImagePicker();
   String? selectedSize;
+  double averageRating = 0.0;
 
   @override
   void initState() {
     super.initState();
     _loadProductDetails();
     selectedSize = Provider.of<RecommendedSizeProvider>(context, listen: false).recommendedSize;
+    _loadReviews();
   }
 
   Future<void> _loadProductDetails() async {
+    if (widget.productId == null) {
+      debugPrint('Error: productId is null');
+      return;
+    }
+
     try {
-      final String response = await rootBundle.loadString('assets/styles/${widget.productId ?? 'default'}.json');
+      final String response = await rootBundle.loadString('assets/styles/${widget.productId}.json');
       final Map<String, dynamic> data = jsonDecode(response);
       if (mounted) {
         setState(() {
@@ -51,6 +60,27 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     } catch (e) {
       debugPrint('Error loading product details: $e');
     }
+  }
+
+  Future<void> _loadReviews() async {
+    if (widget.productId == null) {
+      debugPrint('Error: productId is null');
+      return;
+    }
+
+    getReviews(widget.productId.toString()).listen((List<Review> reviews) {
+      if (mounted) {
+        setState(() {
+          averageRating = _calculateAverageRating(reviews);
+        });
+      }
+    });
+  }
+
+  double _calculateAverageRating(List<Review> reviews) {
+    if (reviews.isEmpty) return 0.0;
+    double sum = reviews.fold(0, (previousValue, review) => previousValue + review.rating);
+    return sum / reviews.length;
   }
 
   String _parseHtmlString(String htmlString) {
@@ -159,6 +189,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
 
     final String imageUrl = 'assets/images/${widget.productId ?? 'default'}.jpg';
+
     return Scaffold(
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
@@ -257,10 +288,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             GestureDetector(
               onTap: () {},
               child: Row(
-                children: const [
-                  Icon(Icons.star, color: Colors.yellow),
-                  SizedBox(width: 4.0),
-                  Text('Rating'),
+                children: [
+                  Text(averageRating.toStringAsFixed(1), style: TextStyle(fontWeight: FontWeight.w800)), // Display the average rating
+                  const Icon(Icons.star, color: Colors.yellow),
+                  const SizedBox(width: 4.0),
+                  const Text('Rating'),
                 ],
               ),
             ),
@@ -325,6 +357,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ElevatedButton(
                       onPressed: () {
                         final selectedProduct = {
+                          'productId': widget.productId ?? 0,
                           'name': productData?['productDisplayName'],
                           'price': productData?['price'],
                           'image': 'assets/images/${widget.productId ?? 'default'}.jpg',
@@ -354,7 +387,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ],
                 ),
                 const SizedBox(height: 16.0),
-                Rating(),
+                Rating(productId: widget.productId.toString()), // Fix the Rating widget instantiation
 
                 const SizedBox(height: 16.0),
                 if (productData?['productDescriptors']?['description']?['value'] != null)
