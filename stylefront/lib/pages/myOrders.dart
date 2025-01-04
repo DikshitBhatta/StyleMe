@@ -48,7 +48,9 @@ class MyOrdersPage extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => ProductDetailPage(productId: productId),
                           ),
-                        );
+                        ).then((_) {
+                          _loadOrders(orderProvider);
+                        });
                       } else {
                         print('Error: productId is null or invalid');
                       }

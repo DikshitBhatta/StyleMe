@@ -8,12 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:image/image.dart' as img; // Add this import
+import 'package:image/image.dart' as img;
 
 class Rating extends StatefulWidget {
   final String productId;
 
-  Rating({required this.productId});
+  const Rating({super.key, required this.productId});
 
   @override
   _RatingState createState() => _RatingState();
@@ -25,11 +25,20 @@ class _RatingState extends State<Rating> {
   final User? user = FirebaseAuth.instance.currentUser;
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
+  List<Review> _reviews = [];
+  Review? _userReview;
+  bool _isEditing = false;
 
   @override
   void dispose() {
     _reviewController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReviews();
   }
 
   Future<void> _pickImage() async {
@@ -63,7 +72,7 @@ class _RatingState extends State<Rating> {
       imageBase64 = await _encodeImageToBase64(_imageFile!);
     }
 
-    final reviewId = FirebaseFirestore.instance.collection('products').doc(widget.productId).collection('reviews').doc().id;
+    final reviewId = _userReview?.id ?? FirebaseFirestore.instance.collection('products').doc(widget.productId).collection('reviews').doc().id;
     final review = Review(
       id: reviewId,
       userId: user!.uid,
@@ -78,11 +87,29 @@ class _RatingState extends State<Rating> {
     setState(() {
       _rating = 0;
       _imageFile = null;
+      _userReview = review;
+      _isEditing = false;
     });
   }
 
   void _deleteReview(String reviewId) async {
     await deleteReview(widget.productId, reviewId);
+    setState(() {
+      _userReview = null;
+      _reviewController.clear();
+      _rating = 0;
+      _imageFile = null;
+      _isEditing = false;
+    });
+  }
+
+  void _editReview(Review review) {
+    setState(() {
+      _reviewController.text = review.reviewText;
+      _rating = review.rating.toDouble();
+      _userReview = review;
+      _isEditing = true;
+    });
   }
 
   Widget _buildStar(int index) {
@@ -126,6 +153,24 @@ class _RatingState extends State<Rating> {
     );
   }
 
+  void _loadReviews() {
+    getReviews(widget.productId).listen((List<Review> reviews) {
+      setState(() {
+        _reviews = reviews;
+        try {
+          _userReview = reviews.firstWhere((review) => review.userId == user?.uid);
+        } catch (e) {
+          _userReview = null;
+        }
+
+        if (_userReview != null) {
+          _reviewController.text = _userReview!.reviewText;
+          _rating = _userReview!.rating.toDouble();
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final hasBoughtProduct = Provider.of<OrderProvider>(context).hasBoughtProduct(widget.productId);
@@ -158,6 +203,8 @@ class _RatingState extends State<Rating> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  if (reviews.isEmpty)
+                    Center(child: Text('No reviews yet.')),
                   SizedBox(
                     height: 215.0,
                     child: ListView.builder(
@@ -171,11 +218,16 @@ class _RatingState extends State<Rating> {
                               SizedBox(width: 8),
                               Text('★ ${review.rating} '),
                               Spacer(),
-                              if (review.userId == user?.uid)
+                              if (review.userId == user?.uid) ...[
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () => _editReview(review),
+                                ),
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () => _deleteReview(review.id),
                                 ),
+                              ],
                             ],
                           ),
                           subtitle: Column(
@@ -201,7 +253,7 @@ class _RatingState extends State<Rating> {
               );
             },
           ),
-          // if (user != null && hasBoughtProduct) 
+          if (user != null && hasBoughtProduct && _userReview == null) 
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -255,7 +307,60 @@ class _RatingState extends State<Rating> {
                 ],
               ),
             ),
-            
+          if (_isEditing)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Edit Your Review',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Stack(
+                    children: [
+                      TextField(
+                        controller: _reviewController,
+                        decoration: InputDecoration(
+                          labelText: 'Your Review',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt, color: Colors.blue),
+                          onPressed: _pickImage,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    children: List.generate(5, (index) => _buildStar(index)),
+                  ),
+                  SizedBox(height: 8.0),
+                  if (_imageFile != null)
+                    Image.file(
+                      File(_imageFile!.path),
+                      width: 100,
+                      height: 100,
+                    ),
+                  SizedBox(height: 8.0),
+                  ElevatedButton(
+                    onPressed: _submitReview,
+                    child: Text('Update Review'),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

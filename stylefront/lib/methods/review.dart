@@ -19,6 +19,15 @@ Future<void> deleteReview(String productId, String reviewId) async {
       .delete();
 }
 
+Future<void> updateReview(String productId, Review review) async {
+  await FirebaseFirestore.instance
+      .collection('products')
+      .doc(productId)
+      .collection('reviews')
+      .doc(review.id)
+      .update(review.toFirestore());
+}
+
 Stream<List<Review>> getReviews(String productId) {
   return FirebaseFirestore.instance
       .collection('products')

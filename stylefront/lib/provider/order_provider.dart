@@ -25,7 +25,7 @@ class OrderProvider with ChangeNotifier {
   }
 
   bool hasBoughtProduct(String productId) {
-    return _orders.any((order) => order['productId'] == productId);
+    return _orders.any((order) => order['productId'].toString() == productId);
   }
 
   Future<void> _saveOrders() async {

@@ -16,6 +16,7 @@ import 'package:stylefront/pages/tryon.dart';
 import '../providers/recommended_size_provider.dart';
 import 'package:stylefront/methods/review.dart';
 import 'package:stylefront/models/review.dart';
+import 'package:stylefront/provider/order_provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int? productId;
@@ -180,6 +181,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final sizes = ['S', 'M', 'L', 'XL', '2X', '3X', '4X', '5X'];
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
     final isFavorite = favoriteProvider.isFavorite(widget.productId ?? 0);
+    final orderProvider = Provider.of<OrderProvider>(context);
+    final hasBoughtProduct = orderProvider.hasBoughtProduct(widget.productId.toString());
 
     if (productData == null) {
       return Scaffold(
@@ -387,7 +390,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ],
                 ),
                 const SizedBox(height: 16.0),
-                Rating(productId: widget.productId.toString()), // Fix the Rating widget instantiation
+                Rating(productId: widget.productId.toString()),
 
                 const SizedBox(height: 16.0),
                 if (productData?['productDescriptors']?['description']?['value'] != null)
