@@ -1,145 +1,115 @@
-#Style Me
+# StyleMe
 
-Style Me is a comprehensive clothing e-commerce application developed as a fourth-semester project by the following group members:
+**StyleMe** is a comprehensive clothing e-commerce application developed as a fourth-semester project by the following group members:
 
-Dikshit Bhatta
+- Dikshit Bhatta
+- Prabin Aryal
+- Siddhant Adhikari
+- Shishir Adhikari
 
-Prabin Aryal
+## Project Description
 
-Siddhant Adhikari
+**StyleMe** is a modern e-commerce platform for clothing, designed to provide users with a seamless shopping experience. The application incorporates standard e-commerce functionalities along with innovative features to stand out in the market. Our main focus is on:
 
-Shishir Adhikari
-
-#Project Description
-
-Style Me is a modern e-commerce platform for clothing, designed to provide users with a seamless shopping experience. The application incorporates standard e-commerce functionalities along with innovative features to stand out in the market. Our main focus is on:
-
-Size Measurement for Users:
-
+### Size Measurement for Users:
 Using real-time camera access and OpenCV to capture and process user measurements for accurate size recommendations.
 
-Virtual Try-On for Clothes:
-
+### Virtual Try-On for Clothes:
 Enabling users to virtually try on clothes (primarily T-shirts) using advanced machine learning techniques.
 
-#Features
+## Features
 
-Core Features:
+### Core Features:
+- **Size Measurement**: Real-time measurement using the device's camera.
+- **Virtual Try-On**: Try clothes virtually before making a purchase.
 
-Size Measurement: Real-time measurement using the device's camera.
+### E-commerce Features:
+- **Product Catalog**: Browse through a wide variety of clothing items.
+- **Search Functionality**:
+  - Text-based search.
+  - Voice-based search using integrated voice recognition technology.
+- **Payment Gateway Integration**: Secure payment options for hassle-free transactions.
+- **Notification System**: Real-time notifications for order updates, offers, and more.
+- **Cart Management**: Add, update, or remove items from the cart.
+- **Favorites**: Save products for future reference.
+- **Product Details Page**: Comprehensive details for each product, including size, material, and more.
 
-Virtual Try-On: Try clothes virtually before making a purchase.
+### Additional Features:
+- User authentication and profile management.
+- Order tracking and history.
+- Responsive and user-friendly UI/UX.
+- Many more features to enhance the shopping experience.
 
-E-commerce Features:
+## Technology Stack
 
-Product Catalog: Browse through a wide variety of clothing items.
+### Frontend:
+- **Flutter**: For building a responsive and intuitive mobile application.
 
-Search Functionality:
+### Backend:
+- **Django**: As the primary backend framework for building robust APIs.
+- **Django Rest Framework (DRF)**: For API development.
+- **PostgreSQL**: As the database for storing user and product information.
 
-Text-based search.
+### Machine Learning Models:
+- **U2NET**: For cloth segmentation.
+- **Graphonomy**: For parsing human body shapes.
+- **Mediapipe**: For extracting body measurements.
+- **Posenet**: For estimating user poses.
+- **Detectron2**: For dense pose estimation.
+- **HR-VITON**: For virtual try-on functionality.
 
-Voice-based search using integrated voice recognition technology.
+### Additional Tools:
+- **Firebase**: For authentication and notification services.
+- **Khalti and Esewa**: Integrated for payment gateway solutions.
 
-Payment Gateway Integration: Secure payment options for hassle-free transactions.
+## Installation and Setup
 
-Notification System: Real-time notifications for order updates, offers, and more.
+1. Clone the repository:
+   ```zsh
+   git clone https://github.com/your-repository-url.git
 
-Cart Management: Add, update, or remove items from the cart.
 
-Favorites: Save products for future reference.
+2. Navigate to the project directory:
+    ```zsh
+    cd styleme
+    cd stylefront
+    ```
+3. Install dependencies:
+    ```zsh
+    flutter pub get
+    ```
 
-Product Details Page: Comprehensive details for each product, including size, material, and more.
+4. Navigate to the backend directory and install backend dependencies:
+    ```zsh
+    cd measurement
+    pip install -r requirements.txt
+    ```
+5. Run the backend server:
+    ```zsh
+    python manage.py runserver
+    ```
+6. Return to the Flutter project directory and run the app:
+    ```zsh
+    cd ../
+    flutter run
+    ```
 
-#Additional Features:
+## Future Enhancements
 
-User authentication and profile management.
+- Expand virtual try-on to include more clothing categories.
 
-Order tracking and history.
+- AI-driven personalized recommendations.
 
-Responsive and user-friendly UI/UX.
+- Multi-language support.
 
-Many more features to enhance the shopping experience.
+- Integration with AR for an immersive shopping experience.
 
-#Technology Stack
+- GPU acceleration for faster virtual try-on processing.
 
-Frontend:
-
-Flutter: For building a responsive and intuitive mobile application.
-
-Backend:
-
-Django: As the primary backend framework for building robust APIs.
-
-Django Rest Framework (DRF): For API development.
-
-PostgreSQL: As the database for storing user and product information.
-
-Machine Learning Models:
-
-U2NET: For cloth segmentation.
-
-Graphonomy: For parsing human body shapes.
-
-Mediapipe: For extracting body measurements.
-
-Posenet: For estimating user poses.
-
-Detectron2: For dense pose estimation.
-
-HR-VITON: For virtual try-on functionality.
-
-Additional Tools:
-
-Firebase: For authentication and notification services.
-
-Khalti and Esewa: Integrated for payment gateway solutions.
-
-#Installation and Setup
-
-Clone the repository:
-
-git clone https://github.com/your-repository-url.git
-
-Navigate to the project directory:
-
-cd styleme
-
-cd stylefront
-
-Install dependencies:
-
-flutter pub get
-
-Navigate to the backend directory and install backend dependencies:
-
-cd measurement
-pip install -r requirements.txt
-
-Run the backend server:
-
-python manage.py runserver
-
-Return to the Flutter project directory and run the app:
-
-cd ../
-flutter run
-
-#Future Enhancements
-
-Expand virtual try-on to include more clothing categories.
-
-AI-driven personalized recommendations.
-
-Multi-language support.
-
-Integration with AR for an immersive shopping experience.
-
-GPU acceleration for faster virtual try-on processing.
-
-#License
+## License
 
 This project is developed for academic purposes and is open for contributions. The licensing terms can be updated as per future requirements.
 
-We hope you enjoy using Style Me as much as we enjoyed building it. Feel free to contribute or provide feedback to make it even better!
+We hope you enjoy using **StyleMe** as much as we enjoyed building it. Feel free to contribute or provide feedback to make it even better!
 
 
