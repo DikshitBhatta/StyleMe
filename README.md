@@ -62,37 +62,64 @@ Enabling users to virtually try on clothes (primarily T-shirts) using advanced m
 - **Firebase**: For authentication and notification services.
 - **Khalti and Esewa**: Integrated for payment gateway solutions.
 
+## Repository layout
+
+| Path | What it is |
+| --- | --- |
+| `stylefront/` | The Flutter app (Android, iOS, web, desktop). |
+| `measurement/` | Django + DRF service: a photo plus the user's height in, body measurements and a recommended size out (MediaPipe pose). Runs standalone on SQLite. |
+| `styleme/` | Django shop backend and the virtual try-on pipeline (U2NET, Graphonomy, DensePose, HR-VITON). Needs PostgreSQL (`styleme_db`) and the ML checkpoints. |
+
 ## Installation and Setup
 
-1. Clone the repository:
-   ```zsh
-   git clone https://github.com/your-repository-url.git
+### 1. Clone
 
+```zsh
+git clone https://github.com/DikshitBhatta/StyleMe.git
+cd StyleMe
+```
 
-2. Navigate to the project directory:
-    ```zsh
-    cd styleme
-    cd stylefront
-    ```
-3. Install dependencies:
-    ```zsh
-    flutter pub get
-    ```
+### 2. Measurement backend
 
-4. Navigate to the backend directory and install backend dependencies:
-    ```zsh
-    cd measurement
-    pip install -r requirements.txt
-    ```
-5. Run the backend server:
-    ```zsh
-    python manage.py runserver
-    ```
-6. Return to the Flutter project directory and run the app:
-    ```zsh
-    cd ../
-    flutter run
-    ```
+```zsh
+cd measurement
+python3 -m venv .venv
+./.venv/bin/pip install -r requirements.txt
+./.venv/bin/python manage.py migrate
+./.venv/bin/python manage.py runserver 8000
+```
+
+It serves `POST /api/measurement/live/`, taking `{"image": "<base64 jpeg>", "height": "<cm>"}`
+and returning shoulder, chest, waist and inseam measurements with a recommended size.
+The whole person must be in frame — a photo cropped at the ankles is rejected.
+
+### 3. Flutter app
+
+```zsh
+cd stylefront
+flutter pub get
+flutter run
+```
+
+By default the app talks to the measurement backend on the machine running it
+(`10.0.2.2:8000` from an Android emulator, `localhost:8000` everywhere else).
+Point it somewhere else — a phone on your LAN, or a deployed host — with:
+
+```zsh
+flutter run --dart-define=MEASUREMENT_API=http://192.168.1.20:8000
+```
+
+### 4. Try-on pipeline (optional, heavy)
+
+`styleme/` needs PostgreSQL with a `styleme_db` database and the HR-VITON /
+Graphonomy / DensePose checkpoints, which are not in the repository.
+
+```zsh
+cd styleme
+python3 -m venv .venv
+./.venv/bin/python manage.py migrate
+./.venv/bin/python manage.py runserver 8001
+```
 
 ## Future Enhancements
 

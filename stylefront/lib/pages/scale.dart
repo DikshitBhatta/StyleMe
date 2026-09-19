@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import '../providers/recommended_size_provider.dart';
+import '../constants/api.dart';
 
 class Scale extends StatefulWidget {
   const Scale({Key? key}) : super(key: key);
@@ -91,7 +92,7 @@ class _ScaleState extends State<Scale> {
       final userHeight = _heightController.text;
 
       final response = await http.post(
-        Uri.parse('http://192.168.201.134:8000/api/measurement/live/'),
+        ApiConfig.liveMeasurement,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'image': base64Image,
